@@ -1,0 +1,1 @@
+curl -o ./src/data/covid.json https://opendata.ecdc.europa.eu/covid19/casedistribution/json/
