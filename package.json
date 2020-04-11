@@ -1,0 +1,27 @@
+{
+    "name": "covid-charts",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "update-source": "curl -o ./src/data/covid.json https://opendata.ecdc.europa.eu/covid19/casedistribution/json/",
+        "build": "npx webpack --mode=production",
+        "publish": "firebase deploy"
+    },
+    "author": "nelopauselli@gmail.com",
+    "license": "ISC",
+    "dependencies": {},
+    "devDependencies": {
+        "@babel/cli": "^7.8.4",
+        "@babel/core": "^7.9.0",
+        "@babel/plugin-proposal-class-properties": "^7.8.3",
+        "@babel/preset-env": "^7.9.5",
+        "babel-loader": "^8.1.0",
+        "copy-webpack-plugin": "^5.1.1",
+        "html-webpack-plugin": "^4.2.0",
+        "webpack": "^4.42.1",
+        "webpack-cli": "^3.3.11",
+        "webpack-dev-server": "^3.10.3"
+    }
+}
