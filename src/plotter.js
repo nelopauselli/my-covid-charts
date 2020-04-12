@@ -1,25 +1,7 @@
-import { colors } from './util';
 import builder from './chart-builder';
 
-export default function plotter() {
+export default function plotter(countries) {
     var url = "./data/covid.json";
-
-    var countries = [
-        { name: 'Argentina', geoId: 'AR', color: colors(0) },
-        { name: 'Brazil', geoId: 'BR', color: colors(1) },
-        { name: 'Chile', geoId: 'CL', color: colors(2) },
-        { name: 'Ecuador', geoId: 'EC', color: colors(3) },
-        { name: 'Colombia', geoId: 'CO', color: colors(4) },
-        { name: 'Uruguay', geoId: 'UY', color: colors(5) },
-        { name: 'Perú', geoId: 'PE', color: colors(6) },
-        { name: 'Estados Unidos', geoId: 'US', color: colors(7) },
-        { name: 'España', geoId: 'ES', color: colors(8) },
-        { name: 'Italia', geoId: 'IT', color: colors(9) },
-        { name: 'Francia', geoId: 'FR', color: colors(10) },
-        { name: 'China', geoId: 'CN', color: colors(11) },
-        { name: 'Korea del Sur', geoId: 'KR', color: colors(12) },
-
-    ];
 
     $.getJSON(url, function (response) {
         let records = response.records;

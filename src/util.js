@@ -11,7 +11,9 @@ var colorList = [
     '#7c2512',
     '#f8af65',
     '#415d97',
-    '#584ff0'
+    '#584ff0',
+    '#6240a3',
+    '#0d32f3'
 ];
 var colorLength = colorList.length;
 
