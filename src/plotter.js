@@ -100,8 +100,9 @@ export default function plotter(countries) {
 
         var argentinaDays = datasetsTotals[0].data.length;
         var datasets2 = datasetsTotals.map(d => {
-            d.data = d.data.slice(0, Math.min(d.data.length, argentinaDays));
-            return d;
+            var clone = Object.assign({}, d);
+            clone.data = d.data.slice(0, Math.min(d.data.length, argentinaDays));
+            return clone;
         })
         var labels2 = labels.slice(0, argentinaDays);
         builder.build('chart-logarithmic-deaths-total-argentina-days', {
