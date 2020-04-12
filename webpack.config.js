@@ -1,14 +1,14 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const path = require('path');
 
 module.exports = {
-    mode:'development',
+    mode: 'development',
     entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.js'
+        filename: 'bundle.[hash].js'
     },
     module: {
         rules: [
@@ -28,9 +28,7 @@ module.exports = {
         contentBase: path.join(__dirname, 'dist'),
     },
     plugins: [
+        new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({ template: './src/index.html' }),
-        new CopyPlugin([
-            { from: './src/data', to: './data' },
-        ]),
     ]
 };

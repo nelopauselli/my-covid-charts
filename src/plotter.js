@@ -1,14 +1,15 @@
 import builder from './chart-builder';
+import data from './data/covid.json';
 
 export default function plotter(countries) {
-    var url = "./data/covid.json";
-
-    $.getJSON(url, function (response) {
-        let records = response.records;
+    console.log(countries);
+    
+        let records = data.records;
 
         var datasetsTotals = [];
         var datasetsPerDay = [];
         for (var country of countries) {
+            console.log(country.name);
             let rows = records.filter(row => row.geoId == country.geoId);
             rows.reverse();
 
@@ -146,5 +147,4 @@ export default function plotter(countries) {
                 }]
             }
         });
-    });
 }

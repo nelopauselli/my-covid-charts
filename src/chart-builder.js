@@ -53,7 +53,11 @@ class ChartBuilder {
             }
         }, options);
 
-        var ctx = document.getElementById(id).getContext('2d');
+        var canvas = document.getElementById(id);
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        var ctx = canvas.getContext('2d');
         var chart = new Chart(ctx, {
             type: 'line',
             data: data,
