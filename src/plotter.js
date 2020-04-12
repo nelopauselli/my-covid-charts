@@ -1,6 +1,8 @@
 import builder from './chart-builder';
 import data from './data/covid.json';
 
+const logaritmicValues = [0.01, 0.05, 0.1, 0.5, 1, 2, 5, 10, 20, 30];
+
 export default function plotter(countries) {
     console.log(countries);
 
@@ -78,11 +80,16 @@ export default function plotter(countries) {
         datasets: datasetsTotals,
         labels: labels
     }, {
-        title: { text: 'total de decesos / 100.000 habitantes (escala logar\u00edtmica)', display: true },
+        title: { text: 'total de decesos cada 100.000 habitantes (escala logar\u00edtmica)', display: true },
         scales: {
             yAxes: [{
                 type: 'logarithmic',
-                display: false
+                display: true,
+                ticks: {
+                    callback: function (value, index, values) {
+                        return logaritmicValues.includes(value) || value == values[0] ? value : null;
+                    }
+                }
             }]
         }
     });
@@ -91,7 +98,7 @@ export default function plotter(countries) {
         datasets: datasetsTotals,
         labels: labels
     }, {
-        title: { text: 'total de decesos / 100.000 habitantes (escala lineal)', display: true },
+            title: { text: 'total de decesos cada 100.000 habitantes (escala lineal)', display: true },
         scales: {
             yAxes: [{
                 type: 'linear',
@@ -104,17 +111,21 @@ export default function plotter(countries) {
         var clone = Object.assign({}, d);
         clone.data = d.data.slice(0, Math.min(d.data.length, argentinaDays));
         return clone;
-    })
+    });
+
     var labels2 = labels.slice(0, argentinaDays);
     builder.build('chart-logarithmic-deaths-total-argentina-days', {
         datasets: datasets2,
         labels: labels2
     }, {
-        title: { text: 'total de decesos / 100.000 habitantes (escala logar\u00edtmica) hasta el d\u00eda ' + labels2[labels2.length - 1], display: true },
+            title: { text: 'total de decesos cada 100.000 habitantes (escala logar\u00edtmica) hasta el d\u00eda ' + labels2[labels2.length - 1], display: true },
         scales: {
             yAxes: [{
                 type: 'logarithmic',
-                display: false
+                display: true,
+                ticks:{callback:function(value, index, values){
+                    return logaritmicValues.includes(value) || value == values[0] ? value : null;
+                }}
             }]
         }
     });
@@ -123,14 +134,14 @@ export default function plotter(countries) {
         datasets: datasetsPerDay,
         labels: labels
     }, {
-        title: { text: 'decesos diarios / 100.000 habitantes (escala logar\u00edtmica)', display: true },
+            title: { text: 'decesos diarios cada 100.000 habitantes (escala logar\u00edtmica)', display: true },
         scales: {
             yAxes: [{
                 type: 'logarithmic',
-                display: false,
+                display: true,
                 ticks: {
-                    callback: function (tick, index, ticks) {
-                        return Math.round(tick * 10000) / 10000;
+                    callback: function (value, index, values) {
+                        return logaritmicValues.includes(value) || value == values[0] ? value : null;
                     }
                 }
             }]
@@ -141,7 +152,7 @@ export default function plotter(countries) {
         datasets: datasetsPerDay,
         labels: labels
     }, {
-        title: { text: 'decesos diarios / 100.000 habitantes (escala lineal)', display: true },
+            title: { text: 'decesos diarios cada 100.000 habitantes (escala lineal)', display: true },
         scales: {
             yAxes: [{
                 type: 'linear',
