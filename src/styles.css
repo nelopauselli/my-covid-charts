@@ -1,0 +1,20 @@
+body {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+hr {
+    color: #6c757d22;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: #6c757d;
+}
+
+.mt-1 {
+    margin-top: .25rem;
+}

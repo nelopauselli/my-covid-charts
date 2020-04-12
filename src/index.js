@@ -1,4 +1,5 @@
-import plotter from './plotter'
+import styles from './styles.css';
+import plotter from './plotter';
 import { colors } from './util';
 
 var color = 0;
