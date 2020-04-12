@@ -10,6 +10,7 @@ var countries = [
     { name: 'Colombia', geoId: 'CO', color: colors(color++) },
     { name: 'Uruguay', geoId: 'UY', color: colors(color++) },
     { name: 'Perú', geoId: 'PE', color: colors(color++) },
+    { name: 'Bolivia', geoId: 'BO', color: colors(color++) },
     { name: 'Paraguay', geoId: 'PY', color: colors(color++) },
     { name: 'Estados Unidos', geoId: 'US', color: colors(color++) },
     { name: 'España', geoId: 'ES', color: colors(color++) },

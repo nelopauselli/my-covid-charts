@@ -13,7 +13,8 @@ var colorList = [
     '#415d97',
     '#584ff0',
     '#6240a3',
-    '#0d32f3'
+    '#0d32f3',
+    '#e2825e'
 ];
 var colorLength = colorList.length;
 
