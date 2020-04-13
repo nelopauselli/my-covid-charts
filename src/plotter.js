@@ -4,14 +4,11 @@ import data from './data/covid.json';
 const logaritmicValues = [0.01, 0.05, 0.1, 0.5, 1, 2, 5, 10, 20, 30];
 
 export default function plotter(countries) {
-    console.log(countries);
-
     let records = data.records;
 
     var datasetsTotals = [];
     var datasetsPerDay = [];
     for (var country of countries) {
-        console.log(country.name);
         let rows = records.filter(row => row.geoId == country.geoId);
         rows.reverse();
 
