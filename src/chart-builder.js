@@ -1,8 +1,8 @@
 class ChartBuilder {
-    build(id, data, options) {
+    build(id, data, options, type) {
         options = Object.assign({
             responsive: true,
-            title: { text: 'decesos / 100.000 habitantes', display: true },
+            title: { text: 'muertes / 100.000 habitantes', display: true },
             legend: {
                 labels: {
                     filter: function (item, data) {
@@ -33,10 +33,16 @@ class ChartBuilder {
                         if (label) {
                             label += ': ';
                         }
-                        label += Math.round(tooltipItem.yLabel * 100) / 100;
+
+                        var value = tooltipItem.yLabel;
+                        label += value.toFixed(2);
 
                         var item = dataset.data[tooltipItem.index];
-                        return label + " (" + item.deaths + "/" + item.total + ")";
+                        if (item.deaths && item.total)
+                            label += " (" + item.deaths + "/" + item.total + ")";
+                        else if (item.deaths)
+                            label += " (vs " + item.deaths.toFixed(2) + " muertes)";
+                        return label;
                     }
                 }
             },
@@ -56,10 +62,10 @@ class ChartBuilder {
         var canvas = document.getElementById(id);
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        
+
         var ctx = canvas.getContext('2d');
         var chart = new Chart(ctx, {
-            type: 'line',
+            type: type || 'line',
             data: data,
             options: options
         });
