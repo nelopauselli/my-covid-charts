@@ -14,10 +14,13 @@ var countries = [
     { name: 'Bolivia', geoId: 'BO', color: colors(color++) },
     { name: 'Paraguay', geoId: 'PY', color: colors(color++) },
     { name: 'Estados Unidos', geoId: 'US', color: colors(color++) },
+    { name: 'Irlanda', geoId: 'IE', color: colors(color++) },
+    { name: 'Suecia', geoId: 'SE', color: colors(color++) },
     { name: 'España', geoId: 'ES', color: colors(color++) },
     { name: 'Alemania', geoId: 'DE', color: colors(color++) },
     { name: 'Italia', geoId: 'IT', color: colors(color++) },
     { name: 'Francia', geoId: 'FR', color: colors(color++) },
+    { name: 'Rusia', geoId: 'RU', color: colors(color++) },
     { name: 'China', geoId: 'CN', color: colors(color++) },
     { name: 'Korea del Sur', geoId: 'KR', color: colors(color++) },
 ];
