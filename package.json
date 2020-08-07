@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "worker": "curl -o ./data/covid.csv https://opendata.ecdc.europa.eu/covid19/casedistribution/csv/ && node worker.js",
+        "worker": "curl -o ./temp/covid.csv https://opendata.ecdc.europa.eu/covid19/casedistribution/csv/ && node worker.js",
         "update-source": "curl -o ./src/data/covid.json https://opendata.ecdc.europa.eu/covid19/casedistribution/json/",
         "build": "npx webpack --mode=production",
         "publish": "firebase deploy",

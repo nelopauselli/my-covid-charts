@@ -1,33 +1,13 @@
 const fs = require('fs');
 const csv = require('csv-parser');
 
-var countries = [
-    { name: 'Argentina', geoId: 'AR' },
-    { name: 'Brazil', geoId: 'BR' },
-    { name: 'Chile', geoId: 'CL' },
-    { name: 'Ecuador', geoId: 'EC' },
-    { name: 'Colombia', geoId: 'CO' },
-    { name: 'Uruguay', geoId: 'UY' },
-    { name: 'Perú', geoId: 'PE' },
-    { name: 'Bolivia', geoId: 'BO' },
-    { name: 'Paraguay', geoId: 'PY' },
-    { name: 'Estados Unidos', geoId: 'US' },
-    { name: 'Irlanda', geoId: 'IE' },
-    { name: 'Suecia', geoId: 'SE' },
-    { name: 'España', geoId: 'ES' },
-    { name: 'Alemania', geoId: 'DE' },
-    { name: 'Italia', geoId: 'IT' },
-    { name: 'Francia', geoId: 'FR' },
-    { name: 'Rusia', geoId: 'RU' },
-    { name: 'China', geoId: 'CN' },
-    { name: 'Korea del Sur', geoId: 'KR' },
-];
+var countries = JSON.parse(fs.readFileSync('./data/countries.json'));
 
 for (let country of countries) {
     country.rows = [];
 }
 
-fs.createReadStream('./data/covid.csv')
+fs.createReadStream('./temp/covid.csv')
     .pipe(csv())
     .on('data', (data) => {
         let country = countries.find(c => c.geoId == data.geoId);
@@ -45,11 +25,20 @@ fs.createReadStream('./data/covid.csv')
             for (let row of country.rows) {
                 let deaths = parseInt(row.deaths);
                 country.deathsTotal += deaths;
-                country.deathsSumPerDay.push(country.deathsTotal);
-                country.deathsAbsPerDay += deaths;
+                if (country.deathsTotal > 0) {
+                    country.deathsSumPerDay.push(country.deathsTotal);
+                    country.deathsAbsPerDay.push(deaths);
+                }
             }
 
-            console.log(`${country.name}: ${country.deathsTotal}`);
+            var json = { geoId: country.geoId, total: country.deathsTotal, deathsSumPerDay: country.deathsSumPerDay };
+            console.log(json);
+        }
+
+        fs.writeFileSync(`./data/muertos.json`, JSON.stringify(countries.map(c => ({ geoId: c.geoId, total: c.deathsTotal }))));
+        for (let country of countries) {
+            fs.writeFileSync(`./data/${country.geoId}-muertos-acumulado-diario.json`, JSON.stringify(country.deathsSumPerDay));
+            fs.writeFileSync(`./data/${country.geoId}-muertos-diarios.json`, JSON.stringify(country.deathsAbsPerDay));
         }
 
     });
