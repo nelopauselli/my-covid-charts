@@ -22,7 +22,7 @@ export default function plotter(countries) {
 
         let values = new Array(avgSize);
         values.fill(NaN);
-        
+
         for (var row of rows) {
             totalCases += parseInt(row.cases);
             totalDeaths += parseInt(row.deaths);
@@ -30,7 +30,7 @@ export default function plotter(countries) {
             cases += (parseInt(row.cases) - parseInt(row.deaths));
             if (deathZero > 0 || row.deaths != 0) {
                 let deaths = parseInt(row.deaths);
-                let value = deaths * 100000 / row.popData2018;
+                let value = deaths * 100000 / (row.popData2019 || row.popData2018);
                 let total = lastValue + value;
 
                 casesTotal.push(
@@ -167,7 +167,7 @@ export default function plotter(countries) {
         datasets: deathsPerDayDatasets,
         labels: labels
     }, {
-            title: { text: `muertes diarias cada 100.000 habitantes (promedio de los \u00faltimos ${avgSize} días, escala logar\u00edtmica)`, display: true },
+        title: { text: `muertes diarias cada 100.000 habitantes (promedio de los \u00faltimos ${avgSize} días, escala logar\u00edtmica)`, display: true },
         scales: {
             yAxes: [{
                 type: 'logarithmic',
@@ -185,7 +185,7 @@ export default function plotter(countries) {
         datasets: deathsPerDayDatasets,
         labels: labels
     }, {
-            title: { text: `muertes diarias cada 100.000 habitantes (promedio de los \u00faltimos ${avgSize} días, escala lineal)`, display: true },
+        title: { text: `muertes diarias cada 100.000 habitantes (promedio de los \u00faltimos ${avgSize} días, escala lineal)`, display: true },
         scales: {
             yAxes: [{
                 type: 'linear',
@@ -193,21 +193,43 @@ export default function plotter(countries) {
         }
     });
 
-    builder.build('chart-logarithmic-cases-total', {
-        datasets: casesTotalDatasets,
-        labels: labels
-    }, {
-        title: { text: 'Casos diagnosticados NO fatales cada 100.000 habitantes (escala logar\u00edtmica)', display: true },
-        scales: {
-            yAxes: [{
-                type: 'logarithmic',
-                display: true,
-                ticks: {
-                    callback: function (value, index, values) {
-                        return logaritmicValues.includes(value) || value == values[0] ? value : null;
-                    }
+    let horizontalBarCanvas = document.getElementById('chart-deaths-bars');
+    horizontalBarCanvas.width = window.innerWidth;
+    horizontalBarCanvas.height = window.innerHeight;
+
+    let horizontalBarData = {
+        labels: deathsTotalDatasets.map(ds => ds.label),
+        datasets: [{
+            data: deathsTotalDatasets.map(ds => ds.data[ds.data.length - 1].y),
+            backgroundColor: deathsTotalDatasets.map(ds => ds.backgroundColor),
+            borderColor: deathsTotalDatasets.map(ds => ds.borderColor)
+        }]
+    };
+    var horizontalBarCtx = horizontalBarCanvas.getContext('2d');
+    new Chart(horizontalBarCtx, {
+        type: 'bar',
+        data: horizontalBarData,
+        options: {
+            elements: {
+                rectangle: {
+                    borderWidth: 2,
                 }
-            }]
+            },
+            responsive: true,
+            legend: {
+                display: false,
+            },
+            title: {
+                display: true,
+                text: 'Total de Muertes cada 100.000 habitantes'
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
         }
     });
 

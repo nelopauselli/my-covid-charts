@@ -1,0 +1,74 @@
+[
+    {
+        "name": "Argentina",
+        "geoId": "AR"
+    },
+    {
+        "name": "Brazil",
+        "geoId": "BR"
+    },
+    {
+        "name": "Chile",
+        "geoId": "CL"
+    },
+    {
+        "name": "Ecuador",
+        "geoId": "EC"
+    },
+    {
+        "name": "Colombia",
+        "geoId": "CO"
+    },
+    {
+        "name": "Uruguay",
+        "geoId": "UY"
+    },
+    {
+        "name": "Perú",
+        "geoId": "PE"
+    },
+    {
+        "name": "Bolivia",
+        "geoId": "BO"
+    },
+    {
+        "name": "Paraguay",
+        "geoId": "PY"
+    },
+    {
+        "name": "Estados Unidos",
+        "geoId": "US"
+    },
+    {
+        "name": "Irlanda",
+        "geoId": "IE"
+    },
+    {
+        "name": "Suecia",
+        "geoId": "SE"
+    },
+    {
+        "name": "Reino Unido",
+        "geoId": "UK"
+    },
+    {
+        "name": "España",
+        "geoId": "ES"
+    },
+    {
+        "name": "Alemania",
+        "geoId": "DE"
+    },
+    {
+        "name": "Italia",
+        "geoId": "IT"
+    },
+    {
+        "name": "Francia",
+        "geoId": "FR"
+    },
+    {
+        "name": "Rusia",
+        "geoId": "RU"
+    }
+]
