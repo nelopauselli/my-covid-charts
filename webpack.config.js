@@ -5,10 +5,13 @@ const path = require('path');
 
 module.exports = {
     mode: 'development',
-    entry: './src/index.js',
+    entry: {
+        world: './src/index.js',
+        arg: './src/argentina.js',
+    },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.[hash].js'
+        filename: '[name].bundle.[hash].js'
     },
     module: {
         rules: [
@@ -32,6 +35,11 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(),
-        new HtmlWebpackPlugin({ template: './src/index.html' }),
+        new HtmlWebpackPlugin({
+            filename: 'index.html', template: './src/index.html'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'argentina.html', template: './src/argentina.html'
+        }),
     ]
 };

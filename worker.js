@@ -80,13 +80,7 @@ fs.createReadStream('./temp/covid.csv')
             continents.push(continent);
         };
 
-        console.log(continents);
-
-        if (fs.existsSync(workingFolder)) {
-            let files = fs.readdirSync(workingFolder);
-            for (let file of files)
-                fs.unlinkSync(path.join(workingFolder, file));
-        } else {
+        if (!fs.existsSync(workingFolder)) {
             fs.mkdirSync(workingFolder);
         }
 

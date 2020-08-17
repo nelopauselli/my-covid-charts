@@ -4,6 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
+        "worker-arg": "curl -o ./temp/covid-arg.csv https://sisa.msal.gov.ar/datos/descargas/covid-19/files/Covid19Casos.csv && node worker-arg.js",
         "worker": "curl -o ./temp/covid.csv https://opendata.ecdc.europa.eu/covid19/casedistribution/csv/ && node worker.js",
         "build": "npx webpack --mode=production",
         "publish": "firebase deploy",
