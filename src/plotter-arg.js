@@ -1,5 +1,24 @@
-import ma from './moving-average';
 import totalArgDeathsSource from './data/ar-total-deaths.json';
+
+function ma(source, period) {
+    var sum = 0;
+    var sma = new Array(source.length);
+    for (var i = 0; i < source.length; i++) {
+        if (i >= period) {
+            for (var j = 0; j < period - 1; j++) {
+                sum = sum + source[i - j].deaths;
+            }
+            sma[i] = {
+                date: source[i].date,
+                deaths: Math.round(sum / period)
+            };
+            sum = 0;
+        } else {
+            sma[i] = { date: source[i].date, deaths: null };
+        }
+    }
+    return sma;
+}
 
 function totalArgentina() {
     let canvas = document.getElementById('ar-chart-deaths-bars');
@@ -95,30 +114,34 @@ function last14DaysArgentina() {
     });
 }
 
-function dailyDeathsMediaAverageArgentina(elementId, regionName, color, ds) {
+function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, color, ds) {
     let canvas = document.getElementById(elementId);
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     var sourceAR = ds.reverse();
-    var datasourceAR = sourceAR.map((a, i) =>
-        ({ x: moment().subtract(sourceAR.length - i, 'days').toDate(), y: a })
+    var datasourceAR = sourceAR.map(a =>
+        ({ x: moment(a.date).toDate(), y: a.deaths })
     );
+
     var averageAR7 = ma(sourceAR, 7);
-    var datasourceAR7 = averageAR7.map((a, i) =>
-        ({ x: moment().subtract(averageAR7.length - i, 'days').toDate(), y: a })
+    var datasourceAR7 = averageAR7.map(a =>
+        ({ x: moment(a.date).toDate(), y: a.deaths })
     );
+
     var averageAR14 = ma(sourceAR, 14);
-    var datasourceAR14 = averageAR14.map((a, i) =>
-        ({ x: moment().subtract(averageAR14.length - i, 'days').toDate(), y: a })
+    var datasourceAR14 = averageAR14.map(a =>
+        ({ x: moment(a.date).toDate(), y: a.deaths })
     );
+
     var averageAR30 = ma(sourceAR, 30);
-    var datasourceAR30 = averageAR30.map((a, i) =>
-        ({ x: moment().subtract(averageAR30.length - i, 'days').toDate(), y: a })
+    var datasourceAR30 = averageAR30.map(a =>
+        ({ x: moment(a.date).toDate(), y: a.deaths })
     );
+
     let data = {
-        labels: datasourceAR.map((e, i) => e.x),
+        labels: datasourceAR.map((e) => e.x),
         datasets: [{
             label: 'diario',
             data: datasourceAR,
@@ -165,7 +188,7 @@ function dailyDeathsMediaAverageArgentina(elementId, regionName, color, ds) {
             },
             title: {
                 display: true,
-                text: 'Media Movil de fallecidos diarios en ' + regionName
+                text: [title, subtitle]
             },
             scales: {
                 yAxes: [{
@@ -192,9 +215,15 @@ export default function plotter() {
     totalArgentina();
     last14DaysArgentina();
 
-    let caba = totalArgDeathsSource.find(r => r.name == 'CABA');
-    dailyDeathsMediaAverageArgentina("ar-chart-daily-deaths-caba", "caba", "#4dc9f6", caba.rows);
+    var datasource = totalArgDeathsSource
+        .sort((a, b) => b.average - a.average);
 
-    let bue = totalArgDeathsSource.find(r => r.name == 'Buenos Aires');
-    dailyDeathsMediaAverageArgentina("ar-chart-daily-deaths-bue", "buenos aires", "#4dc9f6", bue.rows);
+    for (let i = 0; i < 12; i++) {
+        let region = datasource[i];
+        dailyDeathsMediaAverageArgentina(`ar-chart-daily-deaths-${i + 1}`,
+            `Fallecidos en ${region.name}: ${region.total}`,
+            `(${Math.round(region.average*100)/100} por cada 100.000 hab)`,
+            "#4dc9f6",
+            region.rows);
+    }
 }

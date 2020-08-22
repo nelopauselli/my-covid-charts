@@ -60,7 +60,10 @@ fs.createReadStream('./temp/covid-arg.csv')
             while (date > min) {
                 let daily = groupRegion
                     .filter(r => sameDay(new Date(r.fecha_fallecimiento), date));
-                region.rows.push(daily.length);
+                region.rows.push({
+                    date: new Date(date),
+                    deaths: daily.length
+                });
 
                 date.setDate(date.getDate() - 1);
             }

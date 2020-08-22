@@ -1,10 +1,27 @@
-import ma from './moving-average';
 import totalDeathsSource from './data/total-deaths.json';
 import dailyDeathsArSource from './data/daily-deaths-ar.json';
 import dailyDeathsBrSource from './data/daily-deaths-br.json';
 import dailyDeathsUsSource from './data/daily-deaths-us.json';
 
 import totalArgDeathsSource from './data/ar-total-deaths.json';
+
+function ma(source, period) {
+    var sum = 0;
+    var sma = new Array(source.length);
+    for (var i = 0; i < source.length; i++) {
+        if (i >= period) {
+            for (var j = 0; j < period - 1; j++) {
+                sum = sum + source[i - j];
+            }
+            sma[i] = Math.round(sum / period);
+            
+            sum = 0;
+        } else {
+            sma[i] = null;
+        }
+    }
+    return sma;
+}
 
 function totalDeathsSelectedCountriesBars() {
     let canvas = document.getElementById('chart-deaths-selected-countries-bars');
@@ -265,6 +282,7 @@ function dailyDeathsMediaAverage(elementId, regionName, color, ds) {
     var datasourceAR = sourceAR.map((a, i) =>
         ({ x: moment().subtract(sourceAR.length - i, 'days').toDate(), y: a })
     );
+    console.log(datasourceAR)
     var averageAR7 = ma(sourceAR, 7);
     var datasourceAR7 = averageAR7.map((a, i) =>
         ({ x: moment().subtract(averageAR7.length - i, 'days').toDate(), y: a })
