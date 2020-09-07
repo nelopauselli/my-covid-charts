@@ -1,4 +1,4 @@
-import totalArgDeathsSource from './data/ar-total-deaths.json';
+import totalArgSource from './data/ar-total-deaths.json';
 
 function ma(source, period, propertyName = "deaths") {
     var sum = 0;
@@ -27,10 +27,10 @@ function totalArgentinaCases() {
     canvas.height = window.innerHeight;
 
     var datasource = [];
-    for (var i = 0; i < totalArgDeathsSource[0].rows.length; i++) {
+    for (var i = 0; i < totalArgSource[0].rows.length; i++) {
         var row = {
-            date: totalArgDeathsSource[0].rows[i].date,
-            deaths: totalArgDeathsSource.reduce(function (a, c) {
+            date: totalArgSource[0].rows[i].date,
+            deaths: totalArgSource.reduce(function (a, c) {
                 if (c.rows && c.rows.length)
                     return a + c.rows[i].cases
                 return a;
@@ -57,9 +57,9 @@ function totalArgentinaCases() {
         ({ x: a.date, y: a.total })
     );
 
-    var total = totalArgDeathsSource.reduce(function (a, c) {
+    var total = totalArgSource.reduce(function (a, c) {
         return a + c.rows.reduce(function (ra, rc) {
-            return ra + rc.deaths;
+            return ra + rc.cases;
         }, 0);
     }, 0)
 
@@ -138,10 +138,10 @@ function totalArgentinaDeaths() {
     canvas.height = window.innerHeight;
 
     var datasource = [];
-    for (var i = 0; i < totalArgDeathsSource[0].rows.length; i++) {
+    for (var i = 0; i < totalArgSource[0].rows.length; i++) {
         var row = {
-            date: totalArgDeathsSource[0].rows[i].date,
-            deaths: totalArgDeathsSource.reduce(function (a, c) {
+            date: totalArgSource[0].rows[i].date,
+            deaths: totalArgSource.reduce(function (a, c) {
                 if (c.rows && c.rows.length)
                     return a + c.rows[i].deaths
                 return a;
@@ -168,7 +168,7 @@ function totalArgentinaDeaths() {
         ({ x: a.date, y: a.total })
     );
 
-    var deaths = totalArgDeathsSource.reduce(function (a, c) {
+    var deaths = totalArgSource.reduce(function (a, c) {
         return a + c.rows.reduce(function (ra, rc) {
             return ra + rc.deaths;
         }, 0);
@@ -249,10 +249,10 @@ function totalArgentinaFutureDeaths() {
     canvas.height = window.innerHeight;
 
     var datasource = [];
-    for (var i = 0; i < totalArgDeathsSource[0].rows.length; i++) {
+    for (var i = 0; i < totalArgSource[0].rows.length; i++) {
         var row = {
-            date: totalArgDeathsSource[0].rows[i].date,
-            deaths: totalArgDeathsSource.reduce(function (a, c) {
+            date: totalArgSource[0].rows[i].date,
+            deaths: totalArgSource.reduce(function (a, c) {
                 if (c.rows && c.rows.length)
                     return a + c.rows[i].futureDeaths
                 return a;
@@ -279,7 +279,7 @@ function totalArgentinaFutureDeaths() {
         ({ x: a.date, y: a.total })
     );
 
-    var deaths = totalArgDeathsSource.reduce(function (a, c) {
+    var deaths = totalArgSource.reduce(function (a, c) {
         return a + c.rows.reduce(function (ra, rc) {
             return ra + rc.deaths;
         }, 0);
@@ -357,13 +357,13 @@ function totalArgentinaFutureDeaths() {
     });
 }
 
-function totalArgentinaByRegion() {
+function totalArgentinaDeathsByRegion() {
     let canvas = document.getElementById('ar-chart-deaths-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    var datasource = totalArgDeathsSource
+    var datasource = totalArgSource
         .sort((a, b) => b.average - a.average);
 
     let data = {
@@ -375,8 +375,8 @@ function totalArgentinaByRegion() {
         }]
     };
 
-    var horizontalBarCtx = canvas.getContext('2d');
-    new Chart(horizontalBarCtx, {
+    let context = canvas.getContext('2d');
+    new Chart(context, {
         type: 'bar',
         data: data,
         options: {
@@ -404,13 +404,60 @@ function totalArgentinaByRegion() {
     });
 }
 
+function totalArgentinaCasesByRegion() {
+    let canvas = document.getElementById('ar-chart-cases-bars');
+    if (!canvas) return;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    var datasource = totalArgSource
+        .sort((a, b) => b.casesAverage - a.casesAverage);
+
+    let data = {
+        labels: datasource.map(c => c.name),
+        datasets: [{
+            data: datasource.map(c => c.casesAverage),
+            backgroundColor: datasource.map(c => c.color + "22"),
+            borderColor: datasource.map(c => c.color + "AA")
+        }]
+    };
+
+    let context = canvas.getContext('2d');
+    new Chart(context, {
+        type: 'bar',
+        data: data,
+        options: {
+            elements: {
+                rectangle: {
+                    borderWidth: 2,
+                }
+            },
+            responsive: true,
+            legend: {
+                display: false,
+            },
+            title: {
+                display: true,
+                text: 'Casos cada 100.000 habitantes'
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
+
 function last14DaysArgentina() {
     let canvas = document.getElementById('ar-chart-deaths-last-14-days-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    var datasource = totalArgDeathsSource
+    var datasource = totalArgSource
         .sort((a, b) => b.averageLast14Days - a.averageLast14Days);
 
     let data = {
@@ -422,8 +469,8 @@ function last14DaysArgentina() {
         }]
     };
 
-    var horizontalBarCtx = canvas.getContext('2d');
-    new Chart(horizontalBarCtx, {
+    let context = canvas.getContext('2d');
+    new Chart(context, {
         type: 'bar',
         data: data,
         options: {
@@ -518,8 +565,8 @@ function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, ds) {
         ]
     };
 
-    var ctx = canvas.getContext('2d');
-    new Chart(ctx, {
+    let context = canvas.getContext('2d');
+    new Chart(context, {
         type: 'line',
         data: data,
         options: {
@@ -568,10 +615,11 @@ export default function plotter() {
     totalArgentinaCases()
     totalArgentinaDeaths();
     totalArgentinaFutureDeaths();
-    totalArgentinaByRegion();
+    totalArgentinaDeathsByRegion();
+    totalArgentinaCasesByRegion();
     last14DaysArgentina();
 
-    var datasource = totalArgDeathsSource
+    var datasource = totalArgSource
         .sort((a, b) => b.average - a.average);
 
     for (let i = 0; i < 12; i++) {

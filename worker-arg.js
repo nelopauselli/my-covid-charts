@@ -85,6 +85,7 @@ fs.createReadStream('./temp/covid-arg.csv')
             let groupRegion = groupsByRegion[regionName];
             let groupRegionDeaths = groupRegion.filter(d => d.fallecido === 'SI');
             region.deathsTotal = groupRegionDeaths.length;
+            region.casesTotal = groupRegion.length;
             region.ttl = groupRegionDeaths.reduce((a, c) => a + c.ttl, 0) / groupRegionDeaths.length;
             region.deathsLast14DaysTotal = groupRegionDeaths.reduce((a, c) => a + (c.fecha_fallecimiento >= limit14 ? 1 : 0), 0);
 
@@ -120,6 +121,8 @@ fs.createReadStream('./temp/covid-arg.csv')
                         averageLast14Days: r.deathsLast14DaysTotal * 100000 / r.poblacion,
                         total: r.deathsTotal,
                         average: r.deathsTotal * 100000 / r.poblacion,
+                        cases: r.casesTotal,
+                        casesAverage: r.casesTotal * 100000 / r.poblacion,
                         ttl: r.ttl,
                         rows: r.rows
                     }))
