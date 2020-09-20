@@ -1,7 +1,12 @@
 import totalDeathsSource from './data/total-deaths.json';
 import dailyDeathsArSource from './data/daily-deaths-ar.json';
+import dailyDeathsCoSource from './data/daily-deaths-co.json';
+import dailyDeathsPeSource from './data/daily-deaths-pe.json';
 import dailyDeathsBrSource from './data/daily-deaths-br.json';
 import dailyDeathsUsSource from './data/daily-deaths-us.json';
+import dailyDeathsEsSource from './data/daily-deaths-es.json';
+import dailyDeathsSeSource from './data/daily-deaths-se.json';
+import dailyDeathsUkSource from './data/daily-deaths-uk.json';
 
 import totalArgDeathsSource from './data/ar-total-deaths.json';
 
@@ -272,7 +277,7 @@ function last14DaysArgentina() {
     });
 }
 
-function dailyDeathsMediaAverage(elementId, regionName, color, ds) {
+function dailyDeathsMediaAverage(elementId, regionName, ds) {
     let canvas = document.getElementById(elementId);
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -281,11 +286,6 @@ function dailyDeathsMediaAverage(elementId, regionName, color, ds) {
     var sourceAR = ds.reverse();
     var datasourceAR = sourceAR.map((a, i) =>
         ({ x: moment().subtract(sourceAR.length - i, 'days').toDate(), y: a })
-    );
-    console.log(datasourceAR)
-    var averageAR7 = ma(sourceAR, 7);
-    var datasourceAR7 = averageAR7.map((a, i) =>
-        ({ x: moment().subtract(averageAR7.length - i, 'days').toDate(), y: a })
     );
     var averageAR14 = ma(sourceAR, 14);
     var datasourceAR14 = averageAR14.map((a, i) =>
@@ -296,22 +296,13 @@ function dailyDeathsMediaAverage(elementId, regionName, color, ds) {
         ({ x: moment().subtract(averageAR30.length - i, 'days').toDate(), y: a })
     );
     let data = {
-        labels: datasourceAR7.map((e, i) => e.x),
+        labels: datasourceAR.map((e, i) => e.x),
         datasets: [{
             label: 'diario',
             data: datasourceAR,
-            backgroundColor: color + "22",
-            borderColor: color + "22",
+            backgroundColor: "#00000022",
             borderWidth: 0,
             pointRadius: 0
-        }, {
-            label: '7 días',
-            data: datasourceAR7,
-            fill: false,
-            backgroundColor: color + "22",
-            borderColor: color,
-            borderWidth: 1,
-            pointRadius: 1
         }, {
             label: '14 días',
             data: datasourceAR14,
@@ -371,10 +362,15 @@ export default function plotter(countries) {
     totalDeathsLast14DaysBars();
     totalDeathsAllBars();
 
-    dailyDeathsMediaAverage('chart-daily-deaths-ar', 'Argentina', '#4dc9f6', dailyDeathsArSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-br', 'Brasil', '#22ff22', dailyDeathsBrSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-us', 'EEUU', '#2222ff', dailyDeathsUsSource);
-
+    dailyDeathsMediaAverage('chart-daily-deaths-ar', 'Argentina', dailyDeathsArSource);
+    dailyDeathsMediaAverage('chart-daily-deaths-br', 'Brasil', dailyDeathsBrSource);
+    dailyDeathsMediaAverage('chart-daily-deaths-co', 'Colombia', dailyDeathsCoSource);
+    dailyDeathsMediaAverage('chart-daily-deaths-pe', 'Perú', dailyDeathsPeSource);
+    dailyDeathsMediaAverage('chart-daily-deaths-us', 'EEUU', dailyDeathsUsSource);
+    dailyDeathsMediaAverage('chart-daily-deaths-es', 'España', dailyDeathsEsSource);
+    dailyDeathsMediaAverage('chart-daily-deaths-se', 'Suecia', dailyDeathsSeSource);
+    dailyDeathsMediaAverage('chart-daily-deaths-uk', 'Reino Unido', dailyDeathsUkSource);
+    
     totalArgentina();
     last14DaysArgentina();
 }
