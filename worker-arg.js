@@ -9,13 +9,6 @@ var regions = JSON.parse(raw);
 var colors = ['#4dc9f6', '#e4ac9a', '#cb354d', '#99357b', '#a98bd4', '#79b855', '#5a0cab', '#cf1666', '#1e79f5', '#b59fd3', '#337352', '#aed92a', '#2fd867', '#ea9bc9', '#845530', '#3eba14', '#de378a', '#8094c0', '#08e7a6', '#3bbfae', '#07c91d', '#798be4'];
 var color = 0;
 
-var groupBy = function (xs, key) {
-    return xs.reduce(function (rv, x) {
-        (rv[x[key]] = rv[x[key]] || []).push(x);
-        return rv;
-    }, {});
-};
-
 function sameDay(d1, d2) {
     return d1.getFullYear() === d2.getFullYear() &&
         d1.getMonth() === d2.getMonth() &&
@@ -27,18 +20,30 @@ function daysDiff(d1, d2) {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
 }
+
+let min = new Date(2020, 0, 1);
+let max = new Date();
+
+console.log(`[${Date()}] Inicializando regiones...`);
 for (var region of regions) {
     region.color = colors[color++ % colors.length];
-    region.rows = [];
-    region.deaths = 0;
-}
+    region.casesTotal = 0;
+    region.deathsTotal = 0;
+    region.deathsLast14DaysTotal = 0;
 
-let max = new Date(2000, 1, 1);
-let min = new Date();
+    region.rows = [];
+    let date = new Date(min);
+    while (date <= max) {
+        region.rows.push({ date: new Date(date.getFullYear(), date.getMonth(), date.getDate()), cases: 0, deaths: 0, futureDeaths: 0 });
+        date.setDate(date.getDate() + 1);
+    }
+}
 
 console.log(`[${Date()}] Procesando csv...`);
 
-let dataset = [];
+let limit14 = new Date();
+limit14.setDate(limit14.getDate() - 14);
+
 fs.createReadStream('./temp/covid-arg.csv')
     .pipe(csv())
     .on('data', (data) => {
@@ -46,65 +51,50 @@ fs.createReadStream('./temp/covid-arg.csv')
         if (data.clasificacion_resumen === 'Descartado')
             return;
 
+        let region = regions.find(r => r.nombre == data.carga_provincia_nombre);
+        if (!region) {
+            console.error(`no se encontró la región ${data.carga_provincia_nombre}`);
+            return;
+        }
+
         if (data.fecha_inicio_sintomas) {
-            data.fecha_inicio_sintomas = new Date(data.fecha_inicio_sintomas);
-            if (data.fecha_inicio_sintomas > max) max = data.fecha_inicio_sintomas;
-            if (data.fecha_inicio_sintomas < min) min = data.fecha_inicio_sintomas;
+            region.casesTotal++;
+
+            let fecha_inicio_sintomas = new Date(data.fecha_inicio_sintomas);
+            if (fecha_inicio_sintomas > max) max = fecha_inicio_sintomas;
+            if (fecha_inicio_sintomas < min) min = fecha_inicio_sintomas;
+
+            let rowCases = region.rows.find(d => sameDay(d.date, fecha_inicio_sintomas));
+            if (rowCases) {
+                rowCases.cases++;
+            }
         }
+        if (data.fallecido === 'SI') {
+            region.deathsTotal++;
 
-        if (data.fecha_fallecimiento) {
-            data.fecha_fallecimiento = new Date(data.fecha_fallecimiento);
-            if (data.fecha_fallecimiento > max) max = data.fecha_fallecimiento;
-            if (data.fecha_fallecimiento < min) min = data.fecha_fallecimiento;
+            let fecha_fallecimiento = new Date(data.fecha_inicio_sintomas);
+            if (fecha_fallecimiento > max) max = fecha_fallecimiento;
+            if (fecha_fallecimiento < min) min = fecha_fallecimiento;
 
-            data.ttl = daysDiff(data.fecha_inicio_sintomas, data.fecha_fallecimiento);
+
+            let rowDeaths = region.rows.find(d => sameDay(d.date, fecha_fallecimiento));
+            if (rowDeaths) {
+
+                rowDeaths.deaths++;
+                //rowDeaths.ttl = daysDiff(fecha_inicio_sintomas, fecha_fallecimiento);
+            }
+            let rowFutureDeaths = region.rows.find(d => sameDay(d.date, fecha_fallecimiento));
+            if (rowFutureDeaths) {
+                rowFutureDeaths.futureDeaths++;
+            }
+
+            if (fecha_fallecimiento >= limit14)
+                region.deathsLast14DaysTotal++;
         }
-
-        dataset.push(data);
     })
     .on('end', () => {
-        console.log(`[${Date()}] agrupando resultados...`);
-
-        let groupsByRegion = groupBy(dataset, "carga_provincia_nombre");
-
-        let limit14 = new Date();
-        limit14.setDate(limit14.getDate() - 14);
-
         console.log(`max: ${max}`);
         console.log(`min: ${min}`);
-
-        for (let regionName of Object.keys(groupsByRegion)) {
-            let region = regions.find(r => r.nombre == regionName);
-            if (!region) {
-                console.error(`no se encontró la región ${regionName}`);
-                continue;
-            }
-
-            console.log(`[${Date()}] calculando resultados para ${regionName}...`);
-
-            let groupRegion = groupsByRegion[regionName];
-            let groupRegionDeaths = groupRegion.filter(d => d.fallecido === 'SI');
-            region.deathsTotal = groupRegionDeaths.length;
-            region.casesTotal = groupRegion.length;
-            region.ttl = groupRegionDeaths.reduce((a, c) => a + c.ttl, 0) / groupRegionDeaths.length;
-            region.deathsLast14DaysTotal = groupRegionDeaths.reduce((a, c) => a + (c.fecha_fallecimiento >= limit14 ? 1 : 0), 0);
-
-            let date = new Date(max);
-            while (date > min) {
-                let dailyCases = groupRegion.reduce((a, c) => a + (sameDay(new Date(c.fecha_inicio_sintomas), date) ? 1 : 0), 0);
-                let dailyDeaths = groupRegionDeaths.reduce((a, c) => a + (sameDay(new Date(c.fecha_fallecimiento), date) ? 1 : 0), 0);
-                let dailyFutureDeaths = groupRegionDeaths.reduce((a, c) => a + (sameDay(new Date(c.fecha_inicio_sintomas), date) ? 1 : 0), 0);
-
-                region.rows.push({
-                    date: new Date(date),
-                    cases: dailyCases,
-                    futureDeaths: dailyFutureDeaths,
-                    deaths: dailyDeaths,
-                });
-
-                date.setDate(date.getDate() - 1);
-            }
-        }
 
         if (!fs.existsSync(workingFolder)) {
             fs.mkdirSync(workingFolder);
