@@ -39,8 +39,6 @@ function totalArgentinaCases() {
         datasource.push(row);
     }
 
-    datasource.reverse();
-
     var averageAR7 = ma(datasource, 7);
     var datasourceAR7 = averageAR7.map(a =>
         ({ x: a.date, y: a.total })
@@ -150,8 +148,6 @@ function totalArgentinaDeaths() {
         datasource.push(row);
     }
 
-    datasource.reverse();
-
     var averageAR7 = ma(datasource, 7);
     var datasourceAR7 = averageAR7.map(a =>
         ({ x: a.date, y: a.total })
@@ -260,8 +256,6 @@ function totalArgentinaFutureDeaths() {
         }
         datasource.push(row);
     }
-
-    datasource.reverse();
 
     var averageAR7 = ma(datasource, 7);
     var datasourceAR7 = averageAR7.map(a =>
@@ -498,13 +492,12 @@ function last14DaysArgentina() {
     });
 }
 
-function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, ds) {
+function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, source) {
     let canvas = document.getElementById(elementId);
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    var source = ds.reverse();
     var datasourceCases = source.map(a =>
         ({ x: moment(a.date).toDate(), y: a.cases })
     );
