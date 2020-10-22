@@ -30,6 +30,7 @@ for (var region of regions) {
     region.casesTotal = 0;
     region.deathsTotal = 0;
     region.deathsLast14DaysTotal = 0;
+    region.ttl = 0;
 
     region.rows = [];
     let date = new Date(min);
@@ -57,33 +58,33 @@ fs.createReadStream('./temp/covid-arg.csv')
             return;
         }
 
-        if (data.fecha_inicio_sintomas) {
-            region.casesTotal++;
+        let fecha_inicio_sintomas = new Date(data.fecha_inicio_sintomas);
+        region.casesTotal++;
 
-            let fecha_inicio_sintomas = new Date(data.fecha_inicio_sintomas);
-            if (fecha_inicio_sintomas > max) max = fecha_inicio_sintomas;
-            if (fecha_inicio_sintomas < min) min = fecha_inicio_sintomas;
+        if (fecha_inicio_sintomas > max) max = fecha_inicio_sintomas;
+        if (fecha_inicio_sintomas < min) min = fecha_inicio_sintomas;
 
-            let rowCases = region.rows.find(d => sameDay(d.date, fecha_inicio_sintomas));
-            if (rowCases) {
-                rowCases.cases++;
-            }
+        let rowCases = region.rows.find(d => sameDay(d.date, fecha_inicio_sintomas));
+        if (rowCases) {
+            rowCases.cases++;
         }
+
         if (data.fallecido === 'SI') {
             region.deathsTotal++;
 
-            let fecha_fallecimiento = new Date(data.fecha_inicio_sintomas);
+            let fecha_fallecimiento = new Date(data.fecha_fallecimiento);
             if (fecha_fallecimiento > max) max = fecha_fallecimiento;
             if (fecha_fallecimiento < min) min = fecha_fallecimiento;
 
+            var ttl = daysDiff(fecha_inicio_sintomas, fecha_fallecimiento);
+            if (!isNaN(ttl))
+                region.ttl = (region.ttl * (region.deathsTotal - 1) + ttl) / region.deathsTotal;
 
             let rowDeaths = region.rows.find(d => sameDay(d.date, fecha_fallecimiento));
             if (rowDeaths) {
-
                 rowDeaths.deaths++;
-                //rowDeaths.ttl = daysDiff(fecha_inicio_sintomas, fecha_fallecimiento);
             }
-            let rowFutureDeaths = region.rows.find(d => sameDay(d.date, fecha_fallecimiento));
+            let rowFutureDeaths = region.rows.find(d => sameDay(d.date, fecha_inicio_sintomas));
             if (rowFutureDeaths) {
                 rowFutureDeaths.futureDeaths++;
             }

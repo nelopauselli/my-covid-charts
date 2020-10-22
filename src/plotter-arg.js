@@ -165,10 +165,18 @@ function totalArgentinaDeaths() {
     );
 
     var deaths = totalArgSource.reduce(function (a, c) {
-        return a + c.rows.reduce(function (ra, rc) {
-            return ra + rc.deaths;
-        }, 0);
-    }, 0)
+        return a + c.total;
+    }, 0);
+
+    var cases = totalArgSource.reduce(function (a, c) {
+        return a + c.cases;
+    }, 0);
+
+    var ttl = totalArgSource.filter(function (r) { return r.ttl }).reduce(function (a, c) {
+        return a + c.ttl;
+    }, 0) / totalArgSource.filter(function (r) { return r.ttl }).length;
+
+    var fatality = deaths * 100 / cases;
 
     let data = {
         labels: datasource.map(c => c.date),
@@ -215,7 +223,7 @@ function totalArgentinaDeaths() {
             },
             title: {
                 display: true,
-                text: 'Fallecidos en Argentina: ' + deaths + ' personas'
+                text: ['Fallecidos en Argentina: ' + deaths + ' personas', 'ttl: ' + parseInt(ttl) + ' d\u00EDas - fatalidad: ' + parseInt(fatality) + '%']
             },
             scales: {
                 yAxes: [{
@@ -274,14 +282,18 @@ function totalArgentinaFutureDeaths() {
     );
 
     var deaths = totalArgSource.reduce(function (a, c) {
-        return a + c.rows.reduce(function (ra, rc) {
-            return ra + rc.deaths;
-        }, 0);
-    }, 0)
+        return a + c.total;
+    }, 0);
 
-    // var ttl = totalArgDeathsSource.filter(function (r) { return r.ttl }).reduce(function (a, c) {
-    //     return a + c.ttl;
-    // }, 0) / totalArgDeathsSource.filter(function (r) { return r.ttl }).length;
+    var cases = totalArgSource.reduce(function (a, c) {
+        return a + c.cases;
+    }, 0);
+
+    var ttl = totalArgSource.filter(function (r) { return r.ttl }).reduce(function (a, c) {
+        return a + c.ttl;
+    }, 0) / totalArgSource.filter(function (r) { return r.ttl }).length;
+
+    var fatality = deaths * 100 / cases;
 
     let data = {
         labels: datasource.map(c => c.date),
@@ -328,7 +340,8 @@ function totalArgentinaFutureDeaths() {
             },
             title: {
                 display: true,
-                text: 'Fallecidos en Argentina seg\u00FAn Inicio de S\u00EDntomas: ' + deaths + ' personas.' // ttl: ' + ttl + ' d\u00EDas'
+                text: ['Fallecidos en Argentina seg\u00FAn Inicio de S\u00EDntomas: ' + deaths + ' personas',
+                'ttl: ' + parseInt(ttl) + ' d\u00EDas - fatalidad: ' + parseInt(fatality) + '%']
             },
             scales: {
                 yAxes: [{
@@ -492,11 +505,13 @@ function last14DaysArgentina() {
     });
 }
 
-function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, source) {
+function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, region) {
     let canvas = document.getElementById(elementId);
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
+    var source = region.rows;
 
     var datasourceCases = source.map(a =>
         ({ x: moment(a.date).toDate(), y: a.cases })
@@ -569,7 +584,8 @@ function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, source) {
             },
             title: {
                 display: true,
-                text: [title, subtitle]
+                text: [title, subtitle,
+                    'ttl: ' + parseInt(region.ttl) + ' d\u00EDas - fatalidad: ' + parseInt(region.total * 100 / region.cases * 100) / 100 + '%']
             },
             scales: {
                 yAxes: [{
@@ -620,6 +636,6 @@ export default function plotter() {
         dailyDeathsMediaAverageArgentina(`ar-chart-daily-deaths-${i + 1}`,
             `Fallecidos en ${region.name}: ${region.total}`,
             `(${Math.round(region.average * 100) / 100} por cada 100.000 hab)`,
-            region.rows);
+            region);
     }
 }
