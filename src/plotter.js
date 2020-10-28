@@ -5,6 +5,8 @@ import dailyDeathsPeSource from './data/daily-deaths-pe.json';
 import dailyDeathsBrSource from './data/daily-deaths-br.json';
 import dailyDeathsUsSource from './data/daily-deaths-us.json';
 import dailyDeathsEsSource from './data/daily-deaths-es.json';
+import dailyDeathsFrSource from './data/daily-deaths-fr.json';
+import dailyDeathsItSource from './data/daily-deaths-it.json';
 import dailyDeathsSeSource from './data/daily-deaths-se.json';
 import dailyDeathsUkSource from './data/daily-deaths-uk.json';
 
@@ -368,6 +370,8 @@ export default function plotter(countries) {
     dailyDeathsMediaAverage('chart-daily-deaths-pe', 'Perú', dailyDeathsPeSource);
     dailyDeathsMediaAverage('chart-daily-deaths-us', 'EEUU', dailyDeathsUsSource);
     dailyDeathsMediaAverage('chart-daily-deaths-es', 'España', dailyDeathsEsSource);
+    dailyDeathsMediaAverage('chart-daily-deaths-fr', 'Francia', dailyDeathsFrSource);
+    dailyDeathsMediaAverage('chart-daily-deaths-it', 'Italia', dailyDeathsItSource);
     dailyDeathsMediaAverage('chart-daily-deaths-se', 'Suecia', dailyDeathsSeSource);
     dailyDeathsMediaAverage('chart-daily-deaths-uk', 'Reino Unido', dailyDeathsUkSource);
     
