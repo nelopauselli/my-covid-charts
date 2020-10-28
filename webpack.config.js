@@ -8,6 +8,7 @@ module.exports = {
     entry: {
         world: './src/index.js',
         arg: './src/argentina.js',
+        caba: './src/caba.js',
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -40,6 +41,9 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             filename: 'argentina.html', template: './src/argentina.html'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'caba.html', template: './src/caba.html'
         }),
     ]
 };

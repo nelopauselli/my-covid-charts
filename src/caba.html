@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>My COVID-19 charts</title>
+</head>
+
+<body>
+    <div>
+        <a href="/index.html">Ir al Mundo</a>
+        <a href="/argentina.html">Ir a Argentina</a>
+        <h1 class="text-center">
+            Gr&aacute;ficos en funci&oacute;n de la poblaci&oacute;n de cada provincia
+        </h1>
+        <hr />
+
+        <canvas id="caba-chart-cases-time"></canvas>
+        <hr />
+
+        <canvas id="caba-chart-deaths-time"></canvas>
+        <hr />
+
+        <canvas id="caba-chart-future-deaths-time"></canvas>
+        <hr />
+
+        <canvas id="caba-chart-deaths-bars"></canvas>
+        <hr />
+
+        <canvas id="caba-chart-cases-bars"></canvas>
+        <hr />
+
+        <canvas id="caba-chart-deaths-last-14-days-bars"></canvas>
+        <hr />
+
+        <canvas id="caba-chart-daily-deaths-1"></canvas>
+        <hr />
+        <canvas id="caba-chart-daily-deaths-2"></canvas>
+        <hr />
+        <canvas id="caba-chart-daily-deaths-3"></canvas>
+        <hr />
+        <canvas id="caba-chart-daily-deaths-4"></canvas>
+        <hr />
+        <canvas id="caba-chart-daily-deaths-5"></canvas>
+        <hr />
+        <canvas id="caba-chart-daily-deaths-6"></canvas>
+        <hr />
+        <canvas id="caba-chart-daily-deaths-8"></canvas>
+        <hr />
+        <canvas id="caba-chart-daily-deaths-7"></canvas>
+        <hr />
+        <canvas id="caba-chart-daily-deaths-9"></canvas>
+        <hr />
+        <canvas id="caba-chart-daily-deaths-10"></canvas>
+        <hr />
+        <canvas id="caba-chart-daily-deaths-11"></canvas>
+        <hr />
+        <canvas id="caba-chart-daily-deaths-12"></canvas>
+        <hr />
+
+        <div class="text-center">
+            <div class="text-muted mt-1">
+                Origen de datos: <a href="https://data.buenosaires.gob.ar/dataset/casos-covid-19">https://data.buenosaires.gob.ar/dataset/casos-covid-19</a>
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"
+            integrity="sha256-AdQN98MVZs44Eq2yTwtoKufhnU+uZ7v2kXnD5vqzZVo=" crossorigin="anonymous"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+        <script>
+            moment.locale('es-AR');
+        </script>
+</body>
+
+</html>

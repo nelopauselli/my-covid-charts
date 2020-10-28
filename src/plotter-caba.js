@@ -1,4 +1,4 @@
-import totalArgSource from './data/ar-total-deaths.json';
+import totalCabaSource from './data/caba-total-deaths.json';
 
 function ma(source, period, propertyName = "deaths") {
     var sum = 0;
@@ -20,17 +20,17 @@ function ma(source, period, propertyName = "deaths") {
     return sma;
 }
 
-function totalArgentinaCases() {
-    let canvas = document.getElementById('ar-chart-cases-time');
+function totalCABACases() {
+    let canvas = document.getElementById('caba-chart-cases-time');
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     var datasource = [];
-    for (var i = 0; i < totalArgSource[0].rows.length; i++) {
+    for (var i = 0; i < totalCabaSource[0].rows.length; i++) {
         var row = {
-            date: totalArgSource[0].rows[i].date,
-            deaths: totalArgSource.reduce(function (a, c) {
+            date: totalCabaSource[0].rows[i].date,
+            deaths: totalCabaSource.reduce(function (a, c) {
                 if (c.rows && c.rows.length)
                     return a + c.rows[i].cases
                 return a;
@@ -54,7 +54,7 @@ function totalArgentinaCases() {
         ({ x: a.date, y: a.total })
     );
 
-    var total = totalArgSource.reduce(function (a, c) {
+    var total = totalCabaSource.reduce(function (a, c) {
         return a + c.rows.reduce(function (ra, rc) {
             return ra + rc.cases;
         }, 0);
@@ -105,7 +105,7 @@ function totalArgentinaCases() {
             },
             title: {
                 display: true,
-                text: 'Casos en Argentina seg\u00FAn fecha de inicio de S\u00EDntomas: ' + total + ' personas'
+                text: 'Casos en CABA seg\u00FAn fecha de inicio de S\u00EDntomas: ' + total + ' personas'
             },
             scales: {
                 yAxes: [{
@@ -128,17 +128,17 @@ function totalArgentinaCases() {
     });
 }
 
-function totalArgentinaDeaths() {
-    let canvas = document.getElementById('ar-chart-deaths-time');
+function totalCABADeaths() {
+    let canvas = document.getElementById('caba-chart-deaths-time');
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     var datasource = [];
-    for (var i = 0; i < totalArgSource[0].rows.length; i++) {
+    for (var i = 0; i < totalCabaSource[0].rows.length; i++) {
         var row = {
-            date: totalArgSource[0].rows[i].date,
-            deaths: totalArgSource.reduce(function (a, c) {
+            date: totalCabaSource[0].rows[i].date,
+            deaths: totalCabaSource.reduce(function (a, c) {
                 if (c.rows && c.rows.length)
                     return a + c.rows[i].deaths
                 return a;
@@ -162,17 +162,17 @@ function totalArgentinaDeaths() {
         ({ x: a.date, y: a.total })
     );
 
-    var deaths = totalArgSource.reduce(function (a, c) {
+    var deaths = totalCabaSource.reduce(function (a, c) {
         return a + c.total;
     }, 0);
 
-    var cases = totalArgSource.reduce(function (a, c) {
+    var cases = totalCabaSource.reduce(function (a, c) {
         return a + c.cases;
     }, 0);
 
-    var ttl = totalArgSource.filter(function (r) { return r.ttl }).reduce(function (a, c) {
+    var ttl = totalCabaSource.filter(function (r) { return r.ttl }).reduce(function (a, c) {
         return a + c.ttl;
-    }, 0) / totalArgSource.filter(function (r) { return r.ttl }).length;
+    }, 0) / totalCabaSource.filter(function (r) { return r.ttl }).length;
 
     var fatality = deaths * 100 / cases;
 
@@ -221,7 +221,7 @@ function totalArgentinaDeaths() {
             },
             title: {
                 display: true,
-                text: ['Fallecidos en Argentina: ' + deaths + ' personas', 'ttl: ' + parseInt(ttl) + ' d\u00EDas - letalidad: ' + parseInt(fatality) + '%']
+                text: ['Fallecidos en CABA: ' + deaths + ' personas', 'ttl: ' + parseInt(ttl) + ' d\u00EDas - letalidad: ' + parseInt(fatality) + '%']
             },
             scales: {
                 yAxes: [{
@@ -244,17 +244,17 @@ function totalArgentinaDeaths() {
     });
 }
 
-function totalArgentinaFutureDeaths() {
-    let canvas = document.getElementById('ar-chart-future-deaths-time');
+function totalCABAFutureDeaths() {
+    let canvas = document.getElementById('caba-chart-future-deaths-time');
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     var datasource = [];
-    for (var i = 0; i < totalArgSource[0].rows.length; i++) {
+    for (var i = 0; i < totalCabaSource[0].rows.length; i++) {
         var row = {
-            date: totalArgSource[0].rows[i].date,
-            deaths: totalArgSource.reduce(function (a, c) {
+            date: totalCabaSource[0].rows[i].date,
+            deaths: totalCabaSource.reduce(function (a, c) {
                 if (c.rows && c.rows.length)
                     return a + c.rows[i].futureDeaths
                 return a;
@@ -278,17 +278,17 @@ function totalArgentinaFutureDeaths() {
         ({ x: a.date, y: a.total })
     );
 
-    var deaths = totalArgSource.reduce(function (a, c) {
+    var deaths = totalCabaSource.reduce(function (a, c) {
         return a + c.total;
     }, 0);
 
-    var cases = totalArgSource.reduce(function (a, c) {
+    var cases = totalCabaSource.reduce(function (a, c) {
         return a + c.cases;
     }, 0);
 
-    var ttl = totalArgSource.filter(function (r) { return r.ttl }).reduce(function (a, c) {
+    var ttl = totalCabaSource.filter(function (r) { return r.ttl }).reduce(function (a, c) {
         return a + c.ttl;
-    }, 0) / totalArgSource.filter(function (r) { return r.ttl }).length;
+    }, 0) / totalCabaSource.filter(function (r) { return r.ttl }).length;
 
     var fatality = deaths * 100 / cases;
 
@@ -337,7 +337,7 @@ function totalArgentinaFutureDeaths() {
             },
             title: {
                 display: true,
-                text: ['Fallecidos en Argentina seg\u00FAn Inicio de S\u00EDntomas: ' + deaths + ' personas',
+                text: ['Fallecidos en CABA seg\u00FAn Toma de Muestra: ' + deaths + ' personas',
                 'ttl: ' + parseInt(ttl) + ' d\u00EDas - letalidad: ' + parseInt(fatality) + '%']
             },
             scales: {
@@ -361,13 +361,14 @@ function totalArgentinaFutureDeaths() {
     });
 }
 
-function totalArgentinaDeathsByRegion() {
-    let canvas = document.getElementById('ar-chart-deaths-bars');
+function totalCABADeathsByRegion() {
+    let canvas = document.getElementById('caba-chart-deaths-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    var datasource = totalArgSource
+    var datasource = totalCabaSource
+        .filter(function (r) { return r.parent == 'CABA'; })
         .sort((a, b) => b.average - a.average);
 
     let data = {
@@ -395,7 +396,7 @@ function totalArgentinaDeathsByRegion() {
             },
             title: {
                 display: true,
-                text: 'Fallecidos cada 100.000 habitantes'
+                text: 'Fallecidos'
             },
             scales: {
                 yAxes: [{
@@ -408,13 +409,14 @@ function totalArgentinaDeathsByRegion() {
     });
 }
 
-function totalArgentinaCasesByRegion() {
-    let canvas = document.getElementById('ar-chart-cases-bars');
+function totalCABACasesByRegion() {
+    let canvas = document.getElementById('caba-chart-cases-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    var datasource = totalArgSource
+    var datasource = totalCabaSource
+        .filter(function (r) { return r.parent == 'CABA'; })
         .sort((a, b) => b.casesAverage - a.casesAverage);
 
     let data = {
@@ -442,7 +444,7 @@ function totalArgentinaCasesByRegion() {
             },
             title: {
                 display: true,
-                text: 'Casos cada 100.000 habitantes'
+                text: 'Casos'
             },
             scales: {
                 yAxes: [{
@@ -455,13 +457,14 @@ function totalArgentinaCasesByRegion() {
     });
 }
 
-function last14DaysArgentina() {
-    let canvas = document.getElementById('ar-chart-deaths-last-14-days-bars');
+function last14DaysCABA() {
+    let canvas = document.getElementById('caba-chart-deaths-last-14-days-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    var datasource = totalArgSource
+    var datasource = totalCabaSource
+        .filter(function (r) { return r.parent == 'CABA'; })
         .sort((a, b) => b.averageLast14Days - a.averageLast14Days);
 
     let data = {
@@ -489,7 +492,7 @@ function last14DaysArgentina() {
             },
             title: {
                 display: true,
-                text: 'Fallecidos cada 100.000 habitantes (ultimos 14 d\u00EDas)'
+                text: 'Fallecidos (ultimos 14 d\u00EDas)'
             },
             scales: {
                 yAxes: [{
@@ -502,7 +505,7 @@ function last14DaysArgentina() {
     });
 }
 
-function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, region) {
+function dailyDeathsMediaAverageCABA(elementId, title, subtitle, region) {
     let canvas = document.getElementById(elementId);
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -618,21 +621,22 @@ function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, region) {
 }
 
 export default function plotter() {
-    totalArgentinaCases()
-    totalArgentinaDeaths();
-    totalArgentinaFutureDeaths();
-    totalArgentinaDeathsByRegion();
-    totalArgentinaCasesByRegion();
-    last14DaysArgentina();
+    totalCABACases()
+    totalCABADeaths();
+    totalCABAFutureDeaths();
+    totalCABADeathsByRegion();
+    totalCABACasesByRegion();
+    last14DaysCABA();
 
-    var datasource = totalArgSource
+    var datasource = totalCabaSource
+        .filter(function (r) { return r.parent == 'CABA'; })
         .sort((a, b) => b.average - a.average);
 
     for (let i = 0; i < 12; i++) {
         let region = datasource[i];
-        dailyDeathsMediaAverageArgentina(`ar-chart-daily-deaths-${i + 1}`,
+        dailyDeathsMediaAverageCABA(`caba-chart-daily-deaths-${i + 1}`,
             `Fallecidos en ${region.name}: ${region.total}`,
-            `(${Math.round(region.average * 100) / 100} por cada 100.000 hab)`,
+            `(${Math.round(region.average * 100) / 100})`,
             region);
     }
 }

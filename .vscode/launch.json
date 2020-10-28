@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\worker-arg.js"
+            "program": "${workspaceFolder}\\worker-caba.js"
         }
     ]
 }
