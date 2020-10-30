@@ -21,7 +21,7 @@ function ma(source, period) {
                 sum = sum + source[i - j];
             }
             sma[i] = Math.round(sum / period);
-            
+
             sum = 0;
         } else {
             sma[i] = null;
@@ -285,18 +285,21 @@ function dailyDeathsMediaAverage(elementId, regionName, ds) {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    var sourceAR = ds.reverse();
-    var datasourceAR = sourceAR.map((a, i) =>
-        ({ x: moment().subtract(sourceAR.length - i, 'days').toDate(), y: a })
+    var source = ds.reverse();
+    var datasourceAR = source.map((a, i) =>
+        ({ x: moment().subtract(source.length - i, 'days').toDate(), y: Math.max(a, 0) })
     );
-    var averageAR14 = ma(sourceAR, 14);
+    var averageAR14 = ma(source, 14);
     var datasourceAR14 = averageAR14.map((a, i) =>
-        ({ x: moment().subtract(averageAR14.length - i, 'days').toDate(), y: a })
+        ({ x: moment().subtract(averageAR14.length - i, 'days').toDate(), y: Math.max(a, 0) })
     );
-    var averageAR30 = ma(sourceAR, 30);
+    var averageAR30 = ma(source, 30);
     var datasourceAR30 = averageAR30.map((a, i) =>
-        ({ x: moment().subtract(averageAR30.length - i, 'days').toDate(), y: a })
+        ({ x: moment().subtract(averageAR30.length - i, 'days').toDate(), y: Math.max(a, 0) })
     );
+
+    var max = Math.max.apply(null, averageAR14);
+
     let data = {
         labels: datasourceAR.map((e, i) => e.x),
         datasets: [{
@@ -341,7 +344,8 @@ function dailyDeathsMediaAverage(elementId, regionName, ds) {
             scales: {
                 yAxes: [{
                     ticks: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        max: Math.round(max * 1.1)
                     }
                 }],
                 xAxes: [{
@@ -374,7 +378,7 @@ export default function plotter(countries) {
     dailyDeathsMediaAverage('chart-daily-deaths-it', 'Italia', dailyDeathsItSource);
     dailyDeathsMediaAverage('chart-daily-deaths-se', 'Suecia', dailyDeathsSeSource);
     dailyDeathsMediaAverage('chart-daily-deaths-uk', 'Reino Unido', dailyDeathsUkSource);
-    
+
     totalArgentina();
     last14DaysArgentina();
 }
