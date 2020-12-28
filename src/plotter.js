@@ -286,39 +286,39 @@ function dailyDeathsMediaAverage(elementId, regionName, ds) {
     canvas.height = window.innerHeight;
 
     var source = ds.reverse();
-    var datasourceAR = source.map((a, i) =>
-        ({ x: moment().subtract(source.length - i, 'days').toDate(), y: Math.max(a, 0) })
+    var datasource = source.map((a, i) =>
+        ({ x: moment().subtract(source.length - i, 'weeks').toDate(), y: Math.max(a, 0) })
     );
-    var averageAR14 = ma(source, 14);
-    var datasourceAR14 = averageAR14.map((a, i) =>
-        ({ x: moment().subtract(averageAR14.length - i, 'days').toDate(), y: Math.max(a, 0) })
+    var average14 = ma(source, 2);
+    var datasource14 = average14.map((a, i) =>
+        ({ x: moment().subtract(average14.length - i, 'weeks').toDate(), y: Math.max(a, 0) })
     );
-    var averageAR30 = ma(source, 30);
-    var datasourceAR30 = averageAR30.map((a, i) =>
-        ({ x: moment().subtract(averageAR30.length - i, 'days').toDate(), y: Math.max(a, 0) })
+    var average28 = ma(source, 4);
+    var datasource28 = average28.map((a, i) =>
+        ({ x: moment().subtract(average28.length - i, 'weeks').toDate(), y: Math.max(a, 0) })
     );
 
-    var max = Math.max.apply(null, averageAR14);
+    var max = Math.max.apply(null, source);
 
     let data = {
-        labels: datasourceAR.map((e, i) => e.x),
+        labels: datasource.map((e, i) => e.x),
         datasets: [{
             label: 'diario',
-            data: datasourceAR,
+            data: datasource,
             backgroundColor: "#00000022",
             borderWidth: 0,
             pointRadius: 0
         }, {
-            label: '14 días',
-            data: datasourceAR14,
+                label: '2 semanas',
+            data: datasource14,
             fill: false,
             backgroundColor: "#ff000011",
             borderColor: "#ff0000",
             borderWidth: 1,
             pointRadius: 1
         }, {
-            label: '30 días',
-            data: datasourceAR30,
+            label: '4 semanas',
+            data: datasource28,
             fill: false,
             backgroundColor: "#ff00ff11",
             borderColor: "#ff00ff",
