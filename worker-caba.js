@@ -10,14 +10,16 @@ var colors = ['#4dc9f6', '#e4ac9a', '#cb354d', '#99357b', '#a98bd4', '#79b855', 
 var color = 0;
 
 function getMonthFromName(monthName){
+    if (monthName == "DEC") return 12;
+    if (monthName == "NOV") return 11;
+    if (monthName == "OCT") return 10;
+    if (monthName == "SEP") return 9;
     if (monthName == "AUG") return 8;
     if (monthName == "JUL") return 7;
     if (monthName == "JUN") return 6;
     if (monthName == "MAY") return 5;
-    if (monthName == "SEP") return 9;
     if (monthName == "APR") return 4;
     if (monthName == "MAR") return 3;
-    if (monthName == "OCT") return 10;
     if (monthName == "FEB") return 2;
     if (monthName == "JAN") return 1;
     if (monthName == "") return 0;
