@@ -47,9 +47,9 @@ fs.createReadStream('./temp/covid.csv')
 
             let index = 0;
             for (let row of country.rows) {
-                let deaths = parseInt(row.deaths);
+                let deaths = parseInt(row.deaths_weekly);
                 country.deathsTotal += deaths;
-                if (index < 14) country.deathsLast14DaysTotal += deaths;
+                if (index < 2) country.deathsLast14DaysTotal += deaths;
 
                 if (country.deathsTotal > 0) {
                     country.deathsSumPerDay.push(country.deathsTotal);
