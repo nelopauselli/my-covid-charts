@@ -19,24 +19,33 @@ var groupBy = function (xs, key) {
 fs.createReadStream('./temp/covid.csv')
     .pipe(csv())
     .on('data', (data) => {
-        let country = countries.find(c => c.geoId == data.geoId);
+        let country = countries.find(c => c.geoId == data.country_code);
         if (!country) {
             country = {
-                name: data.countriesAndTerritories.split('_').join(' '),
-                geoId: data.geoId,
-                continent: data.continentExp,
-                population: parseInt(data.popData2019),
+                name: data.country || data.country_code,
+                geoId: data.country_code,
+                continent: data.continent,
+                population: parseInt(data.population),
                 rows: [],
+                rownum: 0
             };
             countries.push(country);
         }
 
-        if (country.rows || data.deaths > 0) {
-            if (!country.color) country.color = colors[color++ % colors.length];
+        if (!country.color) country.color = colors[color++ % colors.length];
 
-            country.population = parseInt(data.popData2019);
+        let row = country.rows.find(r => r.year_week === data.year_week);
+        if (!row) {
             country.rows.push(data);
+            row = data;
+            row.population = parseInt(data.population);
         }
+        if (data.indicator === 'deaths')
+            row.deaths = parseInt(data.weekly_count);
+        else if (data.indicator === 'cases')
+            row.cases = parseInt(data.weekly_count);
+
+        country.rownum++;
     })
     .on('end', () => {
         for (let country of countries) {
@@ -47,7 +56,7 @@ fs.createReadStream('./temp/covid.csv')
 
             let index = 0;
             for (let row of country.rows) {
-                let deaths = parseInt(row.deaths_weekly);
+                let deaths = row.deaths;
                 country.deathsTotal += deaths;
                 if (index < 2) country.deathsLast14DaysTotal += deaths;
 
@@ -87,15 +96,14 @@ fs.createReadStream('./temp/covid.csv')
         fs.writeFileSync(path.join(workingFolder, 'total-deaths.json'),
             JSON.stringify(
                 countries.map(c =>
-                    ({
-                        geoId: c.geoId,
-                        name: c.name,
-                        color: c.color,
-                        averageLast14Days: c.deathsLast14DaysTotal * 100000 / c.population,
-                        total: c.deathsTotal,
-                        average: c.deathsTotal * 100000 / c.population
-                    }))
-                    .concat(continents)
+                ({
+                    geoId: c.geoId,
+                    name: c.name,
+                    color: c.color,
+                    averageLast14Days: c.deathsLast14DaysTotal * 100000 / c.population,
+                    total: c.deathsTotal,
+                    average: c.deathsTotal * 100000 / c.population
+                })).concat(continents)
             )
         );
 

@@ -1,16 +1,16 @@
 import totalDeathsSource from './data/total-deaths.json';
-import dailyDeathsArSource from './data/daily-deaths-ar.json';
-import dailyDeathsCoSource from './data/daily-deaths-co.json';
-import dailyDeathsPeSource from './data/daily-deaths-pe.json';
-import dailyDeathsBrSource from './data/daily-deaths-br.json';
-import dailyDeathsUsSource from './data/daily-deaths-us.json';
-import dailyDeathsEsSource from './data/daily-deaths-es.json';
-import dailyDeathsFrSource from './data/daily-deaths-fr.json';
-import dailyDeathsItSource from './data/daily-deaths-it.json';
-import dailyDeathsSeSource from './data/daily-deaths-se.json';
-import dailyDeathsUkSource from './data/daily-deaths-uk.json';
+import dailyDeathsArSource from './data/daily-deaths-arg.json';
+import dailyDeathsCoSource from './data/daily-deaths-col.json';
+import dailyDeathsPeSource from './data/daily-deaths-per.json';
+import dailyDeathsBrSource from './data/daily-deaths-bra.json';
+import dailyDeathsUsSource from './data/daily-deaths-usa.json';
+import dailyDeathsEsSource from './data/daily-deaths-esp.json';
+import dailyDeathsFrSource from './data/daily-deaths-fra.json';
+import dailyDeathsItSource from './data/daily-deaths-ita.json';
+import dailyDeathsSeSource from './data/daily-deaths-swe.json';
+import dailyDeathsUkSource from './data/daily-deaths-gbr.json';
 
-import totalArgDeathsSource from './data/ar-total-deaths.json';
+//import totalArgDeathsSource from './data/ar-total-deaths.json';
 
 function ma(source, period) {
     var sum = 0;
@@ -36,10 +36,11 @@ function totalDeathsSelectedCountriesBars() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    let countries = ['AR', 'BR', 'CL', 'EC', 'CO', 'UY', 'PE', 'BO', 'PY', 'US',
-        'IE', 'SE', 'UK', 'ES', 'DE', 'IT', 'FR', 'RU',
-        'IL', 'TR', 'KR', 'JP', 'ZA', 'IN',
-        'AU',
+    let countries = [
+        'ARG', 'BRA', 'CHL', 'ECU', 'COL', 'URY', 'PER', 'BOL', 'PRY', 'USA', 'MEX',
+        'IRL', 'SWE', 'GBR', 'ESP', 'DEU', 'ITA', 'FRA', 'RUS',
+        'ISR', 'JPN', 'CHN',
+        'AUS',
         'Asia', 'Europe', 'America', 'Africa'];
 
     var datasource = totalDeathsSource
@@ -309,7 +310,7 @@ function dailyDeathsMediaAverage(elementId, regionName, ds) {
             borderWidth: 0,
             pointRadius: 0
         }, {
-                label: '2 semanas',
+            label: '2 semanas',
             data: datasource14,
             fill: false,
             backgroundColor: "#ff000011",
@@ -339,7 +340,7 @@ function dailyDeathsMediaAverage(elementId, regionName, ds) {
             },
             title: {
                 display: true,
-                text: 'Media Movil de fallecidos diarios en ' + regionName
+                text: 'Fallecidos en ' + regionName
             },
             scales: {
                 yAxes: [{
@@ -379,6 +380,6 @@ export default function plotter(countries) {
     dailyDeathsMediaAverage('chart-daily-deaths-se', 'Suecia', dailyDeathsSeSource);
     dailyDeathsMediaAverage('chart-daily-deaths-uk', 'Reino Unido', dailyDeathsUkSource);
 
-    totalArgentina();
-    last14DaysArgentina();
+    //totalArgentina();
+    //last14DaysArgentina();
 }
