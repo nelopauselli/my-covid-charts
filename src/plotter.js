@@ -10,8 +10,6 @@ import dailyDeathsItSource from './data/daily-deaths-ita.json';
 import dailyDeathsSeSource from './data/daily-deaths-swe.json';
 import dailyDeathsUkSource from './data/daily-deaths-gbr.json';
 
-//import totalArgDeathsSource from './data/ar-total-deaths.json';
-
 function ma(source, period) {
     var sum = 0;
     var sma = new Array(source.length);
@@ -183,110 +181,12 @@ function totalDeathsLast14DaysBars() {
     });
 }
 
-function totalArgentina() {
-    let canvas = document.getElementById('ar-chart-deaths-bars');
-    if (!canvas) return;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight * 10;
-
-    var datasource = totalArgDeathsSource
-        //.filter(c => c.total > 0)
-        .sort((a, b) => b.average - a.average);
-
-    let data = {
-        labels: datasource.map(c => c.name),
-        datasets: [{
-            data: datasource.map(c => c.average),
-            backgroundColor: datasource.map(c => c.color + "22"),
-            borderColor: datasource.map(c => c.color + "AA")
-        }]
-    };
-
-    var horizontalBarCtx = canvas.getContext('2d');
-    new Chart(horizontalBarCtx, {
-        type: 'horizontalBar',
-        data: data,
-        options: {
-            elements: {
-                rectangle: {
-                    borderWidth: 2,
-                }
-            },
-            responsive: true,
-            legend: {
-                display: false,
-            },
-            title: {
-                display: true,
-                text: 'Fallecidos cada 100.000 habitantes'
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
-}
-
-function last14DaysArgentina() {
-    let canvas = document.getElementById('chart-deaths-last-14-days-bars');
-    if (!canvas) return;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    var datasource = totalDeathsSource
-        .filter(c => c.averageLast14Days > 0)
-        .sort((a, b) => b.averageLast14Days - a.averageLast14Days)
-        .slice(0, 20);
-
-    let data = {
-        labels: datasource.map(c => c.name),
-        datasets: [{
-            data: datasource.map(c => c.averageLast14Days),
-            backgroundColor: datasource.map(c => c.color + "22"),
-            borderColor: datasource.map(c => c.color + "AA")
-        }]
-    };
-
-    var horizontalBarCtx = canvas.getContext('2d');
-    new Chart(horizontalBarCtx, {
-        type: 'horizontalBar',
-        data: data,
-        options: {
-            elements: {
-                rectangle: {
-                    borderWidth: 2,
-                }
-            },
-            responsive: true,
-            legend: {
-                display: false,
-            },
-            title: {
-                display: true,
-                text: 'Fallecidos cada 100.000 habitantes (ultimos 14 días)'
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
-}
-
-function dailyDeathsMediaAverage(elementId, regionName, ds) {
+function dailyDeathsMediaAverage(elementId, regionName, source) {
     let canvas = document.getElementById(elementId);
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    var source = ds.reverse();
     var datasource = source.map((a, i) =>
         ({ x: moment().subtract(source.length - i, 'weeks').toDate(), y: Math.max(a, 0) })
     );
@@ -329,6 +229,8 @@ function dailyDeathsMediaAverage(elementId, regionName, ds) {
         ]
     };
 
+    var total = source.reduce((a, c) => a + c, 0);
+
     var ctx = canvas.getContext('2d');
     new Chart(ctx, {
         type: 'line',
@@ -340,7 +242,7 @@ function dailyDeathsMediaAverage(elementId, regionName, ds) {
             },
             title: {
                 display: true,
-                text: 'Fallecidos en ' + regionName
+                text: 'Fallecidos en ' + regionName + ' (' + total + ' personas)'
             },
             scales: {
                 yAxes: [{
@@ -379,7 +281,4 @@ export default function plotter(countries) {
     dailyDeathsMediaAverage('chart-daily-deaths-it', 'Italia', dailyDeathsItSource);
     dailyDeathsMediaAverage('chart-daily-deaths-se', 'Suecia', dailyDeathsSeSource);
     dailyDeathsMediaAverage('chart-daily-deaths-uk', 'Reino Unido', dailyDeathsUkSource);
-
-    //totalArgentina();
-    //last14DaysArgentina();
 }
