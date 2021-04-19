@@ -13,6 +13,11 @@ import dailyDeathsItSource from './data/daily-deaths-ita.json';
 import dailyDeathsSeSource from './data/daily-deaths-swe.json';
 import dailyDeathsUkSource from './data/daily-deaths-gbr.json';
 
+var colors = {
+    cases: '#82b1ff',
+    deaths: '#ff0000'
+}
+
 function ma(source, period) {
     var sum = 0;
     var sma = new Array(source.length);
@@ -193,10 +198,6 @@ function dailyDeathsMediaAverage(elementId, regionName, source) {
     var datasource = source.map((a, i) =>
         ({ x: moment().subtract(source.length - i, 'weeks').toDate(), y: Math.max(a, 0) })
     );
-    var average14 = ma(source, 2);
-    var datasource14 = average14.map((a, i) =>
-        ({ x: moment().subtract(average14.length - i, 'weeks').toDate(), y: Math.max(a, 0) })
-    );
     var average28 = ma(source, 4);
     var datasource28 = average28.map((a, i) =>
         ({ x: moment().subtract(average28.length - i, 'weeks').toDate(), y: Math.max(a, 0) })
@@ -209,25 +210,18 @@ function dailyDeathsMediaAverage(elementId, regionName, source) {
         datasets: [{
             label: 'diario',
             data: datasource,
-            backgroundColor: "#00000022",
+            backgroundColor: colors.deaths + "22",
+            borderColor: colors.deaths +"22",
             borderWidth: 0,
             pointRadius: 0
-        }, {
-            label: '2 semanas',
-            data: datasource14,
-            fill: false,
-            backgroundColor: "#ff000011",
-            borderColor: "#ff0000",
-            borderWidth: 1,
-            pointRadius: 1
         }, {
             label: '4 semanas',
             data: datasource28,
             fill: false,
-            backgroundColor: "#ff00ff11",
-            borderColor: "#ff00ff",
-            borderWidth: 1,
-            pointRadius: 1
+            backgroundColor: colors.deaths + "22",
+            borderColor: colors.deaths,
+            borderWidth: 2,
+            pointRadius: 0
         }
         ]
     };
@@ -279,7 +273,7 @@ export default function plotter(countries) {
     dailyDeathsMediaAverage('chart-daily-deaths-co', 'Colombia', dailyDeathsCoSource);
     dailyDeathsMediaAverage('chart-daily-deaths-bo', 'Bolivia', dailyDeathsBoSource);
     dailyDeathsMediaAverage('chart-daily-deaths-py', 'Paraguay', dailyDeathsPySource);
-    dailyDeathsMediaAverage('chart-daily-deaths-ch', 'Chile', dailyDeathsChSource);    
+    dailyDeathsMediaAverage('chart-daily-deaths-ch', 'Chile', dailyDeathsChSource);
     dailyDeathsMediaAverage('chart-daily-deaths-pe', 'Perú', dailyDeathsPeSource);
     dailyDeathsMediaAverage('chart-daily-deaths-us', 'EEUU', dailyDeathsUsSource);
     dailyDeathsMediaAverage('chart-daily-deaths-es', 'España', dailyDeathsEsSource);

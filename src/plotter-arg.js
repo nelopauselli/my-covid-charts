@@ -1,5 +1,10 @@
 import totalArgSource from './data/ar-total-deaths.json';
 
+var colors = {
+    cases: '#82b1ff',
+    deaths: '#ff0000'
+}
+
 function ma(source, period, propertyName = "deaths") {
     var sum = 0;
     var sma = new Array(source.length);
@@ -39,18 +44,8 @@ function totalArgentinaCases() {
         datasource.push(row);
     }
 
-    var averageAR7 = ma(datasource, 7);
-    var datasourceAR7 = averageAR7.map(a =>
-        ({ x: a.date, y: a.total })
-    );
-
-    var averageAR14 = ma(datasource, 14);
-    var datasourceAR14 = averageAR14.map(a =>
-        ({ x: a.date, y: a.total })
-    );
-
-    var averageAR30 = ma(datasource, 30);
-    var datasourceAR30 = averageAR30.map(a =>
+    var averageAR28 = ma(datasource, 28);
+    var datasourceAR28 = averageAR28.map(a =>
         ({ x: a.date, y: a.total })
     );
 
@@ -63,34 +58,20 @@ function totalArgentinaCases() {
     let data = {
         labels: datasource.map(c => c.date),
         datasets: [{
+            label: 'diario',
             data: datasource.map(c => c.deaths),
-            backgroundColor: "#4dc9f622",
-            borderColor: "#4dc9f6AA",
+            backgroundColor: colors.cases + "22",
+            borderColor: colors.cases + "22",
+            borderWidth: 0,
             pointRadius: 0,
         }, {
-            label: '7 d\u00EDas',
-            data: datasourceAR7,
+            label: '4 semanas',
+            data: datasourceAR28,
             fill: false,
-            backgroundColor: "#4dc9f622",
-            borderColor: "#4dc9f6",
-            borderWidth: 1,
-            pointRadius: 1
-        }, {
-            label: '14 d\u00EDas',
-            data: datasourceAR14,
-            fill: false,
-            backgroundColor: "#ff000011",
-            borderColor: "#ff0000",
-            borderWidth: 1,
-            pointRadius: 1
-        }, {
-            label: '30 d\u00EDas',
-            data: datasourceAR30,
-            fill: false,
-            backgroundColor: "#ff00ff11",
-            borderColor: "#ff00ff",
-            borderWidth: 1,
-            pointRadius: 1
+            backgroundColor: colors.cases + "22",
+            borderColor: colors.cases,
+            borderWidth: 2,
+            pointRadius: 0
         }]
     };
 
@@ -147,18 +128,8 @@ function totalArgentinaDeaths() {
         datasource.push(row);
     }
 
-    var averageAR7 = ma(datasource, 7);
-    var datasourceAR7 = averageAR7.map(a =>
-        ({ x: a.date, y: a.total })
-    );
-
-    var averageAR14 = ma(datasource, 14);
-    var datasourceAR14 = averageAR14.map(a =>
-        ({ x: a.date, y: a.total })
-    );
-
-    var averageAR30 = ma(datasource, 30);
-    var datasourceAR30 = averageAR30.map(a =>
+    var averageAR28 = ma(datasource, 28);
+    var datasourceAR28 = averageAR28.map(a =>
         ({ x: a.date, y: a.total })
     );
 
@@ -179,34 +150,20 @@ function totalArgentinaDeaths() {
     let data = {
         labels: datasource.map(c => c.date),
         datasets: [{
+            label: 'diario',
             data: datasource.map(c => c.deaths),
-            backgroundColor: "#4dc9f622",
-            borderColor: "#4dc9f6AA",
+            backgroundColor: colors.deaths + "22",
+            borderColor: colors.deaths + "22",
+            borderWidth: 0,
             pointRadius: 0,
         }, {
-            label: '7 d\u00EDas',
-            data: datasourceAR7,
+            label: '4 semanas',
+            data: datasourceAR28,
             fill: false,
-            backgroundColor: "#4dc9f622",
-            borderColor: "#4dc9f6",
-            borderWidth: 1,
-            pointRadius: 1
-        }, {
-            label: '14 d\u00EDas',
-            data: datasourceAR14,
-            fill: false,
-            backgroundColor: "#ff000011",
-            borderColor: "#ff0000",
-            borderWidth: 1,
-            pointRadius: 1
-        }, {
-            label: '30 d\u00EDas',
-            data: datasourceAR30,
-            fill: false,
-            backgroundColor: "#ff00ff11",
-            borderColor: "#ff00ff",
-            borderWidth: 1,
-            pointRadius: 1
+            backgroundColor: colors.deaths + "22",
+            borderColor: colors.deaths,
+            borderWidth: 2,
+            pointRadius: 0
         }]
     };
 
@@ -263,18 +220,8 @@ function totalArgentinaFutureDeaths() {
         datasource.push(row);
     }
 
-    var averageAR7 = ma(datasource, 7);
-    var datasourceAR7 = averageAR7.map(a =>
-        ({ x: a.date, y: a.total })
-    );
-
-    var averageAR14 = ma(datasource, 14);
-    var datasourceAR14 = averageAR14.map(a =>
-        ({ x: a.date, y: a.total })
-    );
-
-    var averageAR30 = ma(datasource, 30);
-    var datasourceAR30 = averageAR30.map(a =>
+    var averageAR28 = ma(datasource, 28);
+    var datasourceAR28 = averageAR28.map(a =>
         ({ x: a.date, y: a.total })
     );
 
@@ -295,34 +242,20 @@ function totalArgentinaFutureDeaths() {
     let data = {
         labels: datasource.map(c => c.date),
         datasets: [{
+            label: 'diario',
             data: datasource.map(c => c.deaths),
-            backgroundColor: "#4dc9f622",
-            borderColor: "#4dc9f6AA",
+            backgroundColor: colors.deaths + "22",
+            borderColor: colors.deaths + "22",
+            borderWidth: 0,
             pointRadius: 0,
         }, {
-            label: '7 d\u00EDas',
-            data: datasourceAR7,
+            label: '4 semanas',
+            data: datasourceAR28,
             fill: false,
-            backgroundColor: "#4dc9f622",
-            borderColor: "#4dc9f6",
-            borderWidth: 1,
-            pointRadius: 1
-        }, {
-            label: '14 d\u00EDas',
-            data: datasourceAR14,
-            fill: false,
-            backgroundColor: "#ff000011",
-            borderColor: "#ff0000",
-            borderWidth: 1,
-            pointRadius: 1
-        }, {
-            label: '30 d\u00EDas',
-            data: datasourceAR30,
-            fill: false,
-            backgroundColor: "#ff00ff11",
-            borderColor: "#ff00ff",
-            borderWidth: 1,
-            pointRadius: 1
+            backgroundColor: colors.deaths + "22",
+            borderColor: colors.deaths,
+            borderWidth: 2,
+            pointRadius: 0
         }]
     };
 
@@ -533,8 +466,8 @@ function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, region) {
         datasets: [{
             label: 'diario',
             data: datasourceDeaths,
-            backgroundColor: "#ff000022",
-            borderColor: "#ff000022",
+            backgroundColor: colors.deaths + "22",
+            borderColor: colors.deaths + "22",
             borderWidth: 0,
             pointRadius: 0,
             yAxisID: 'y-axis-1',
@@ -542,17 +475,17 @@ function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, region) {
             label: '14 d\u00EDas',
             data: datasourceMediaDeaths,
             fill: false,
-            backgroundColor: "#ff000011",
-            borderColor: "#ff0000",
-            borderWidth: 1,
+            backgroundColor: colors.deaths + "11",
+            borderColor: colors.deaths,
+            borderWidth: 2,
             pointRadius: 0,
             yAxisID: 'y-axis-1',
         },
         {
             label: 'casos',
             data: datasourceCases,
-            backgroundColor: "#4dc9f622",
-            borderColor: "#4dc9f622",
+            backgroundColor: colors.cases + "22",
+            borderColor: colors.cases + "22",
             borderWidth: 0,
             pointRadius: 0,
             yAxisID: 'y-axis-2',
@@ -561,9 +494,9 @@ function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, region) {
             label: '14 d\u00EDas',
             data: datasourceMediaCases,
             fill: false,
-            backgroundColor: "#4dc9f611",
-            borderColor: "#4dc9f6",
-            borderWidth: 1,
+            backgroundColor: colors.cases+"22",
+            borderColor: colors.cases,
+            borderWidth: 2,
             pointRadius: 0,
             yAxisID: 'y-axis-2',
         }
@@ -630,6 +563,7 @@ export default function plotter() {
 
     for (let i = 0; i < 12; i++) {
         let region = datasource[i];
+
         dailyDeathsMediaAverageArgentina(`ar-chart-daily-deaths-${i + 1}`,
             `Fallecidos en ${region.name}: ${region.total}`,
             `(${Math.round(region.average * 100) / 100} por cada 100.000 hab)`,
