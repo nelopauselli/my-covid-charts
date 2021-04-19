@@ -58,7 +58,22 @@ fs.createReadStream('./temp/covid-arg.csv')
             return;
         }
 
-        let fecha_inicio_sintomas = new Date(data.fecha_inicio_sintomas);
+        let fecha_inicio_sintomas = Date(data.fecha_inicio_sintomas + ' GMT-03:00');
+        if (isNaN(fecha_inicio_sintomas))
+            fecha_inicio_sintomas = new Date(data.fecha_diagnostico + ' GMT-03:00');
+        if (isNaN(fecha_inicio_sintomas))
+            fecha_inicio_sintomas = new Date(data.fecha_apertura + ' GMT-03:00');
+
+        if (isNaN(fecha_inicio_sintomas)) {
+            console.error("no se pudo determinar la fecha: ", data);
+            return;
+        }
+
+        if (!region.min || region.min > fecha_inicio_sintomas)
+            region.min = fecha_inicio_sintomas
+        if (!region.max || region.max < fecha_inicio_sintomas)
+            region.max = fecha_inicio_sintomas
+
         region.casesTotal++;
 
         if (fecha_inicio_sintomas > max) max = fecha_inicio_sintomas;
@@ -67,12 +82,14 @@ fs.createReadStream('./temp/covid-arg.csv')
         let rowCases = region.rows.find(d => sameDay(d.date, fecha_inicio_sintomas));
         if (rowCases) {
             rowCases.cases++;
+        } else {
+            console.error("row not found: " + fecha_inicio_sintomas, data)
         }
 
         if (data.fallecido === 'SI') {
             region.deathsTotal++;
 
-            let fecha_fallecimiento = new Date(data.fecha_fallecimiento);
+            let fecha_fallecimiento = new Date(data.fecha_fallecimiento + ' GMT-03:00');
             if (fecha_fallecimiento > max) max = fecha_fallecimiento;
             if (fecha_fallecimiento < min) min = fecha_fallecimiento;
 
@@ -83,6 +100,8 @@ fs.createReadStream('./temp/covid-arg.csv')
             let rowDeaths = region.rows.find(d => sameDay(d.date, fecha_fallecimiento));
             if (rowDeaths) {
                 rowDeaths.deaths++;
+            } else {
+                console.error("row not found", data);
             }
             let rowFutureDeaths = region.rows.find(d => sameDay(d.date, fecha_inicio_sintomas));
             if (rowFutureDeaths) {
@@ -94,8 +113,13 @@ fs.createReadStream('./temp/covid-arg.csv')
         }
     })
     .on('end', () => {
-        console.log(`max: ${max}`);
-        console.log(`min: ${min}`);
+        for (let region of regions) {
+            console.log(`region: ${ region.iso_nombre }`);
+            for (let index = 1; index < 11; index++) {
+                let row = region.rows[region.rows.length - index];
+                console.log(` - cases: ${row.cases} -  deaths: ${row.deaths}`);
+            }
+        }
 
         if (!fs.existsSync(workingFolder)) {
             fs.mkdirSync(workingFolder);
@@ -104,19 +128,19 @@ fs.createReadStream('./temp/covid-arg.csv')
         fs.writeFileSync(path.join(workingFolder, 'ar-total-deaths.json'),
             JSON.stringify(
                 regions.map(r =>
-                    ({
-                        geoId: r.iso_id,
-                        name: r.nombre,
-                        color: r.color,
-                        last14Days: r.deathsLast14DaysTotal,
-                        averageLast14Days: r.deathsLast14DaysTotal * 100000 / r.poblacion,
-                        total: r.deathsTotal,
-                        average: r.deathsTotal * 100000 / r.poblacion,
-                        cases: r.casesTotal,
-                        casesAverage: r.casesTotal * 100000 / r.poblacion,
-                        ttl: r.ttl,
-                        rows: r.rows
-                    }))
+                ({
+                    geoId: r.iso_id,
+                    name: r.nombre,
+                    color: r.color,
+                    last14Days: r.deathsLast14DaysTotal,
+                    averageLast14Days: r.deathsLast14DaysTotal * 100000 / r.poblacion,
+                    total: r.deathsTotal,
+                    average: r.deathsTotal * 100000 / r.poblacion,
+                    cases: r.casesTotal,
+                    casesAverage: r.casesTotal * 100000 / r.poblacion,
+                    ttl: r.ttl,
+                    rows: r.rows
+                }))
             )
         );
     });
