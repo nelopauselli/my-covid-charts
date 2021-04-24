@@ -12,6 +12,8 @@ import dailyDeathsFrSource from './data/daily-deaths-fra.json';
 import dailyDeathsItSource from './data/daily-deaths-ita.json';
 import dailyDeathsSeSource from './data/daily-deaths-swe.json';
 import dailyDeathsUkSource from './data/daily-deaths-gbr.json';
+import dailyDeathsDeSource from './data/daily-deaths-deu.json';
+import dailyDeathsIsSource from './data/daily-deaths-isr.json';
 
 var colors = {
     cases: '#82b1ff',
@@ -44,7 +46,7 @@ function totalDeathsSelectedCountriesBars() {
 
     let countries = [
         'ARG', 'BRA', 'CHL', 'ECU', 'COL', 'URY', 'PER', 'BOL', 'PRY', 'USA', 'MEX',
-        'IRL', 'SWE', 'GBR', 'ESP', 'DEU', 'ITA', 'FRA', 'RUS',
+        'DEU', 'IRL', 'SWE', 'GBR', 'ESP', 'DEU', 'ITA', 'FRA', 'RUS',
         'ISR', 'JPN', 'CHN',
         'AUS',
         'Asia', 'Europe', 'America', 'Africa'];
@@ -281,4 +283,7 @@ export default function plotter(countries) {
     dailyDeathsMediaAverage('chart-daily-deaths-it', 'Italia', dailyDeathsItSource);
     dailyDeathsMediaAverage('chart-daily-deaths-se', 'Suecia', dailyDeathsSeSource);
     dailyDeathsMediaAverage('chart-daily-deaths-uk', 'Reino Unido', dailyDeathsUkSource);
+    dailyDeathsMediaAverage('chart-daily-deaths-de', 'Alemania', dailyDeathsDeSource);
+    dailyDeathsMediaAverage('chart-daily-deaths-is', 'Israel', dailyDeathsIsSource);
+    
 }
