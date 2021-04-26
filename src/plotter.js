@@ -20,6 +20,14 @@ var colors = {
     deaths: '#ff0000'
 }
 
+let countries = [
+    'ARG', 'BRA', 'CHL', 'ECU', 'COL', 'URY', 'PER', 'BOL', 'PRY', 'USA', 'MEX',
+    'DEU', 'IRL', 'SWE', 'GBR', 'ESP', 'DEU', 'ITA', 'FRA', 'RUS',
+    'ISR', 'JPN', 'CHN',
+    'AUS',
+    'Asia', 'Europe', 'America', 'Africa'];
+
+
 function ma(source, period) {
     var sum = 0;
     var sma = new Array(source.length);
@@ -43,13 +51,6 @@ function totalDeathsSelectedCountriesBars() {
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
-    let countries = [
-        'ARG', 'BRA', 'CHL', 'ECU', 'COL', 'URY', 'PER', 'BOL', 'PRY', 'USA', 'MEX',
-        'DEU', 'IRL', 'SWE', 'GBR', 'ESP', 'DEU', 'ITA', 'FRA', 'RUS',
-        'ISR', 'JPN', 'CHN',
-        'AUS',
-        'Asia', 'Europe', 'America', 'Africa'];
 
     var datasource = totalDeathsSource
         .filter(c => countries.includes(c.geoId))
@@ -149,9 +150,8 @@ function totalDeathsLast14DaysBars() {
     canvas.height = window.innerHeight;
 
     var datasource = totalDeathsSource
-        .filter(c => c.averageLast14Days > 0)
-        .sort((a, b) => b.averageLast14Days - a.averageLast14Days)
-        .slice(0, 20);
+        .filter(c => countries.includes(c.geoId))
+        .sort((a, b) => b.averageLast14Days - a.averageLast14Days);
 
     let data = {
         labels: datasource.map(c => c.name),
@@ -178,7 +178,7 @@ function totalDeathsLast14DaysBars() {
             },
             title: {
                 display: true,
-                text: 'Fallecidos cada 100.000 habitantes (ultimos 14 días)'
+                text: 'Fallecidos cada 100.000 habitantes (ultimas 3 semanas)'
             },
             scales: {
                 yAxes: [{
