@@ -1,5 +1,6 @@
 const fs = require('fs'),
     path = require('path');
+const StreamZip = require('node-stream-zip');
 const csv = require('csv-parser');
 
 let workingFolder = './src/data';
@@ -45,102 +46,111 @@ console.log(`[${Date()}] Procesando csv...`);
 let limit14 = new Date();
 limit14.setDate(limit14.getDate() - 14);
 
-fs.createReadStream('./temp/covid-arg.csv')
-    .pipe(csv())
-    .on('data', (data) => {
+const zip = new StreamZip.async({ file: './temp/covid-arg.zip' });
+async function app() {
+    const stm = await zip.stream('Covid19Casos.csv');
+    stm.pipe(csv())
+        .on('data', (data) => {
+            if (data.clasificacion_resumen === 'Descartado')
+                return;
 
-        if (data.clasificacion_resumen === 'Descartado')
-            return;
+            let region = regions.find(r => r.nombre == data.carga_provincia_nombre);
+            if (!region) {
+                console.error(`no se encontró la región ${data.carga_provincia_nombre}`);
+                return;
+            }
 
-        let region = regions.find(r => r.nombre == data.carga_provincia_nombre);
-        if (!region) {
-            console.error(`no se encontró la región ${data.carga_provincia_nombre}`);
-            return;
-        }
+            let fecha_inicio_sintomas = Date(data.fecha_inicio_sintomas + ' GMT-03:00');
+            if (isNaN(fecha_inicio_sintomas))
+                fecha_inicio_sintomas = new Date(data.fecha_diagnostico + ' GMT-03:00');
+            if (isNaN(fecha_inicio_sintomas))
+                fecha_inicio_sintomas = new Date(data.fecha_apertura + ' GMT-03:00');
 
-        let fecha_inicio_sintomas = Date(data.fecha_inicio_sintomas + ' GMT-03:00');
-        if (isNaN(fecha_inicio_sintomas))
-            fecha_inicio_sintomas = new Date(data.fecha_diagnostico + ' GMT-03:00');
-        if (isNaN(fecha_inicio_sintomas))
-            fecha_inicio_sintomas = new Date(data.fecha_apertura + ' GMT-03:00');
+            if (isNaN(fecha_inicio_sintomas)) {
+                console.error("no se pudo determinar la fecha: ", data);
+                return;
+            }
 
-        if (isNaN(fecha_inicio_sintomas)) {
-            console.error("no se pudo determinar la fecha: ", data);
-            return;
-        }
+            if (!region.min || region.min > fecha_inicio_sintomas)
+                region.min = fecha_inicio_sintomas
+            if (!region.max || region.max < fecha_inicio_sintomas)
+                region.max = fecha_inicio_sintomas
 
-        if (!region.min || region.min > fecha_inicio_sintomas)
-            region.min = fecha_inicio_sintomas
-        if (!region.max || region.max < fecha_inicio_sintomas)
-            region.max = fecha_inicio_sintomas
+            region.casesTotal++;
 
-        region.casesTotal++;
+            if (fecha_inicio_sintomas > max) max = fecha_inicio_sintomas;
+            if (fecha_inicio_sintomas < min) min = fecha_inicio_sintomas;
 
-        if (fecha_inicio_sintomas > max) max = fecha_inicio_sintomas;
-        if (fecha_inicio_sintomas < min) min = fecha_inicio_sintomas;
-
-        let rowCases = region.rows.find(d => sameDay(d.date, fecha_inicio_sintomas));
-        if (rowCases) {
-            rowCases.cases++;
-        } else {
-            console.error("row not found: " + fecha_inicio_sintomas, data)
-        }
-
-        if (data.fallecido === 'SI') {
-            region.deathsTotal++;
-
-            let fecha_fallecimiento = new Date(data.fecha_fallecimiento + ' GMT-03:00');
-            if (fecha_fallecimiento > max) max = fecha_fallecimiento;
-            if (fecha_fallecimiento < min) min = fecha_fallecimiento;
-
-            var ttl = daysDiff(fecha_inicio_sintomas, fecha_fallecimiento);
-            if (!isNaN(ttl))
-                region.ttl = (region.ttl * (region.deathsTotal - 1) + ttl) / region.deathsTotal;
-
-            let rowDeaths = region.rows.find(d => sameDay(d.date, fecha_fallecimiento));
-            if (rowDeaths) {
-                rowDeaths.deaths++;
+            let rowCases = region.rows.find(d => sameDay(d.date, fecha_inicio_sintomas));
+            if (rowCases) {
+                rowCases.cases++;
             } else {
-                console.error("row not found", data);
-            }
-            let rowFutureDeaths = region.rows.find(d => sameDay(d.date, fecha_inicio_sintomas));
-            if (rowFutureDeaths) {
-                rowFutureDeaths.futureDeaths++;
+                console.error("row not found: " + fecha_inicio_sintomas, data)
             }
 
-            if (fecha_fallecimiento >= limit14)
-                region.deathsLast14DaysTotal++;
-        }
-    })
-    .on('end', () => {
-        for (let region of regions) {
-            console.log(`region: ${ region.iso_nombre }`);
-            for (let index = 1; index < 11; index++) {
-                let row = region.rows[region.rows.length - index];
-                console.log(` - cases: ${row.cases} -  deaths: ${row.deaths}`);
+            if (data.fallecido === 'SI') {
+                region.deathsTotal++;
+
+                let fecha_fallecimiento = new Date(data.fecha_fallecimiento + ' GMT-03:00');
+                if (fecha_fallecimiento > max) max = fecha_fallecimiento;
+                if (fecha_fallecimiento < min) min = fecha_fallecimiento;
+
+                var ttl = daysDiff(fecha_inicio_sintomas, fecha_fallecimiento);
+                if (!isNaN(ttl))
+                    region.ttl = (region.ttl * (region.deathsTotal - 1) + ttl) / region.deathsTotal;
+
+                let rowDeaths = region.rows.find(d => sameDay(d.date, fecha_fallecimiento));
+                if (rowDeaths) {
+                    rowDeaths.deaths++;
+                } else {
+                    console.error("row not found", data);
+                }
+                let rowFutureDeaths = region.rows.find(d => sameDay(d.date, fecha_inicio_sintomas));
+                if (rowFutureDeaths) {
+                    rowFutureDeaths.futureDeaths++;
+                }
+
+                if (fecha_fallecimiento >= limit14)
+                    region.deathsLast14DaysTotal++;
             }
-        }
+        })
+        .on('end', () => {
+            for (let region of regions) {
+                console.log(`region: ${region.iso_nombre}`);
+                for (let index = 1; index < 11; index++) {
+                    let row = region.rows[region.rows.length - index];
+                    console.log(` - cases: ${row.cases} -  deaths: ${row.deaths}`);
+                }
+            }
 
-        if (!fs.existsSync(workingFolder)) {
-            fs.mkdirSync(workingFolder);
-        }
+            if (!fs.existsSync(workingFolder)) {
+                fs.mkdirSync(workingFolder);
+            }
 
-        fs.writeFileSync(path.join(workingFolder, 'ar-total-deaths.json'),
-            JSON.stringify(
-                regions.map(r =>
-                ({
-                    geoId: r.iso_id,
-                    name: r.nombre,
-                    color: r.color,
-                    last14Days: r.deathsLast14DaysTotal,
-                    averageLast14Days: r.deathsLast14DaysTotal * 100000 / r.poblacion,
-                    total: r.deathsTotal,
-                    average: r.deathsTotal * 100000 / r.poblacion,
-                    cases: r.casesTotal,
-                    casesAverage: r.casesTotal * 100000 / r.poblacion,
-                    ttl: r.ttl,
-                    rows: r.rows
-                }))
-            )
-        );
-    });
+            fs.writeFileSync(path.join(workingFolder, 'ar-total-deaths.json'),
+                JSON.stringify(
+                    regions.map(r =>
+                    ({
+                        geoId: r.iso_id,
+                        name: r.nombre,
+                        color: r.color,
+                        last14Days: r.deathsLast14DaysTotal,
+                        averageLast14Days: r.deathsLast14DaysTotal * 100000 / r.poblacion,
+                        total: r.deathsTotal,
+                        average: r.deathsTotal * 100000 / r.poblacion,
+                        cases: r.casesTotal,
+                        casesAverage: r.casesTotal * 100000 / r.poblacion,
+                        ttl: r.ttl,
+                        rows: r.rows
+                    }))
+                )
+            );
+            zip.close();
+        });
+
+}
+
+app();
+
+
+

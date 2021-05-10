@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "worker-caba": "curl -o ./temp/covid-caba.csv https://cdn.buenosaires.gob.ar/datosabiertos/datasets/salud/casos-covid-19/casos_covid19.csv && node worker-caba.js",
-        "worker-arg": "curl -o ./temp/covid-arg.csv https://sisa.msal.gov.ar/datos/descargas/covid-19/files/Covid19Casos.csv && node worker-arg.js",
+        "worker-arg": "curl -o ./temp/covid-arg.zip https://sisa.msal.gov.ar/datos/descargas/covid-19/files/Covid19Casos.zip && tar -C ./temp -xf ./temp/covid-arg.zip && node worker-arg.js",
         "worker": "curl -o ./temp/covid.csv https://opendata.ecdc.europa.eu/covid19/nationalcasedeath/csv/ && node worker.js",
         "dev": "npx webpack-dev-server",
         "build": "npx webpack --mode=production",
@@ -15,7 +15,8 @@
     "author": "nelopauselli@gmail.com",
     "license": "ISC",
     "dependencies": {
-        "csv-parser": "^2.3.3"
+        "csv-parser": "^2.3.3",
+        "node-stream-zip": "^1.13.3"
     },
     "devDependencies": {
         "@babel/cli": "^7.8.4",

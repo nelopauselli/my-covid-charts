@@ -23,7 +23,7 @@ var colors = {
 let countries = [
     'ARG', 'BRA', 'CHL', 'ECU', 'COL', 'URY', 'PER', 'BOL', 'PRY', 'USA', 'MEX',
     'DEU', 'IRL', 'SWE', 'GBR', 'ESP', 'DEU', 'ITA', 'FRA', 'RUS',
-    'ISR', 'JPN', 'CHN',
+    'ISR', 'JPN', 'CHN', 'IND',
     'AUS',
     'Asia', 'Europe', 'America', 'Africa'];
 
