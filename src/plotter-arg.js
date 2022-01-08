@@ -71,14 +71,14 @@ function totalArgentinaCases() {
             borderDash: [2],
             pointRadius: 0,
         }, {
-            label: 'diario',
+            label: 'semanal',
             data: datasource.map((c, i) => i <= limit ? c.deaths : null),
             backgroundColor: colors.cases + "22",
             borderColor: colors.cases + "22",
             borderWidth: 0,
             pointRadius: 0,
         }, {
-            label: 'diario',
+            label: 'semanal',
             data: datasource.map((c, i) => i >= limit ? c.deaths : null),
             backgroundColor: "#0f0f0f22",
             borderColor: "#0f0f0f22",
@@ -183,14 +183,14 @@ function totalArgentinaDeaths() {
             borderDash: [2],
             pointRadius: 0,
         }, {
-            label: 'diario',
+            label: 'semanal',
             data: datasource.map((c, i) => i <= limit ? c.deaths : null),
             backgroundColor: colors.deaths + "22",
             borderColor: colors.deaths + "22",
             borderWidth: 0,
             pointRadius: 0,
         }, {
-            label: 'diario',
+            label: 'semanal',
             data: datasource.map((c, i) => i >= limit ? c.deaths : null),
             backgroundColor: "#0f0f0f22",
             borderColor: "#0f0f0f22",
@@ -424,7 +424,7 @@ function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, region) {
             pointRadius: 0,
             yAxisID: 'y-axis-1',
         }, {
-            label: 'diario',
+            label: 'semanal',
             data: datasourceDeaths,
             backgroundColor: colors.deaths + "22",
             borderColor: colors.deaths + "22",
