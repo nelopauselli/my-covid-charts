@@ -4,7 +4,7 @@ const csv = require('csv-parser');
 
 let workingFolder = './src/data';
 
-var raw = fs.readFileSync(path.join(__dirname, './temp/regions-caba.json'));
+var raw = fs.readFileSync(path.join(__dirname, './regions-caba.json'));
 var regions = JSON.parse(raw);
 var colors = ['#4dc9f6', '#e4ac9a', '#cb354d', '#99357b', '#a98bd4', '#79b855', '#5a0cab', '#cf1666', '#1e79f5', '#b59fd3', '#337352', '#aed92a', '#2fd867', '#ea9bc9', '#845530', '#3eba14', '#de378a', '#8094c0', '#08e7a6', '#3bbfae', '#07c91d', '#798be4'];
 var color = 0;

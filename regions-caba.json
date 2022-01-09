@@ -1,0 +1,367 @@
+[
+    {
+        "nombre": "",
+        "poblacion": 1,
+        "provincia": "Buenos Aires"
+    },
+    {
+        "nombre": "BOCA",
+        "poblacion": 1,
+        "provincia": "CABA"
+    },
+    {
+        "nombre": "NUEVA POMPEYA",
+        "poblacion": 1,
+        "provincia": "CABA"
+    },
+    {
+        "nombre": "RECOLETA",
+        "poblacion": 1,
+        "provincia": "CABA"
+    },
+    {
+        "nombre": "VILLA URQUIZA",
+        "poblacion": 1,
+        "provincia": "CABA"
+    },
+    {
+        "nombre": "BARRACAS",
+        "poblacion": 1,
+        "provincia": "CABA"
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "MONSERRAT",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "RETIRO",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "BALVANERA",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "ALMAGRO",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "FLORES",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "SAN TELMO",
+        "poblacion": 1
+    },
+    {
+        "provincia": "NA",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "CABALLITO",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "COLEGIALES",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "CONSTITUCION",
+        "poblacion": 1
+    },
+    {
+        "provincia": "La Pampa",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Santiago del Estero",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Santa Cruz",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Tierra del Fuego",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Salta",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Chubut",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Río Negro",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "La Rioja",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Neuquén",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Corrientes",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Formosa",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "San Juan",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Misiones",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "San Luis",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Catamarca",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "VILLA SOLDATI",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "VILLA ORTUZAR",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "VILLA LUGANO",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "PALERMO",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "BOEDO",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "VILLA DEVOTO",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "AGRONOMIA",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "VILLA CRESPO",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "BELGRANO",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "PARQUE PATRICIOS",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "LINIERS",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "PARQUE AVELLANEDA",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "MATADEROS",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "PUERTO MADERO",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "SAN NICOLAS",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "NUÑEZ",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Córdoba",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "SAAVEDRA",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "PATERNAL",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "PARQUE CHAS",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "VILLA LURO",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "FLORESTA",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "VILLA RIACHUELO",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "VILLA SANTA RITA",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "MONTE CASTRO",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "VILLA DEL PARQUE",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "COGHLAN",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "VERSALLES",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Santa Fe",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Entre Ríos",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Chaco",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "VILLA GRAL. MITRE",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "PARQUE CHACABUCO",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "VILLA PUEYRREDON",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Mendoza",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "SAN CRISTOBAL",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "CHACARITA",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "VELEZ SARSFIELD",
+        "poblacion": 1
+    },
+    {
+        "provincia": "CABA",
+        "nombre": "VILLA REAL",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Jujuy",
+        "nombre": "",
+        "poblacion": 1
+    },
+    {
+        "provincia": "Tucumán",
+        "nombre": "",
+        "poblacion": 1
+    }
+]
