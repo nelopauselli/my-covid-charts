@@ -621,24 +621,24 @@ function dailyDeathsMediaAverageCABA(elementId, title, subtitle, region) {
 export default function plotter() {
     fetch('./data/caba-total-deaths.json')
         .then(response => response.json())
-    then(totalCabaSource => {
-        totalCABACases(totalCabaSource)
-        totalCABADeaths(totalCabaSource);
-        totalCABAFutureDeaths(totalCabaSource);
-        totalCABADeathsByRegion(totalCabaSource);
-        totalCABACasesByRegion(totalCabaSource);
-        last14DaysCABA(totalCabaSource);
+        .then(totalCabaSource => {
+            totalCABACases(totalCabaSource)
+            totalCABADeaths(totalCabaSource);
+            totalCABAFutureDeaths(totalCabaSource);
+            totalCABADeathsByRegion(totalCabaSource);
+            totalCABACasesByRegion(totalCabaSource);
+            last14DaysCABA(totalCabaSource);
 
-        var datasource = totalCabaSource
-            .filter(function (r) { return r.parent == 'CABA'; })
-            .sort((a, b) => b.average - a.average);
+            var datasource = totalCabaSource
+                .filter(function (r) { return r.parent == 'CABA'; })
+                .sort((a, b) => b.average - a.average);
 
-        for (let i = 0; i < 12; i++) {
-            let region = datasource[i];
-            dailyDeathsMediaAverageCABA(`caba-chart-daily-deaths-${i + 1}`,
-                `Fallecidos en ${region.name}: ${region.total}`,
-                `(${Math.round(region.average * 100) / 100})`,
-                region);
-        }
-    });
+            for (let i = 0; i < 12; i++) {
+                let region = datasource[i];
+                dailyDeathsMediaAverageCABA(`caba-chart-daily-deaths-${i + 1}`,
+                    `Fallecidos en ${region.name}: ${region.total}`,
+                    `(${Math.round(region.average * 100) / 100})`,
+                    region);
+            }
+        });
 }
