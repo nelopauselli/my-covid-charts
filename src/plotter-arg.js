@@ -69,14 +69,14 @@ function totalArgentinaCases(totalArgSource) {
             borderDash: [2],
             pointRadius: 0,
         }, {
-            label: 'semanal',
+            label: 'diario',
             data: datasource.map((c, i) => i <= limit ? c.deaths : null),
             backgroundColor: colors.cases + "22",
             borderColor: colors.cases + "22",
             borderWidth: 0,
             pointRadius: 0,
         }, {
-            label: 'semanal',
+            label: 'diario',
             data: datasource.map((c, i) => i >= limit ? c.deaths : null),
             backgroundColor: "#0f0f0f22",
             borderColor: "#0f0f0f22",
@@ -511,23 +511,23 @@ function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, region) {
 export default function plotter() {
     fetch('./data/ar-total-deaths.json')
         .then(response => response.json())
-    then(totalArgSource => {
-        totalArgentinaCases(totalArgSource)
-        totalArgentinaDeaths(totalArgSource);
-        totalArgentinaDeathsByRegion(totalArgSource);
-        totalArgentinaCasesByRegion(totalArgSource);
-        last14DaysArgentina(totalArgSource);
+        .then(totalArgSource => {
+            totalArgentinaCases(totalArgSource)
+            totalArgentinaDeaths(totalArgSource);
+            totalArgentinaDeathsByRegion(totalArgSource);
+            totalArgentinaCasesByRegion(totalArgSource);
+            last14DaysArgentina(totalArgSource);
 
-        var datasource = totalArgSource
-            .sort((a, b) => b.average - a.average);
+            var datasource = totalArgSource
+                .sort((a, b) => b.average - a.average);
 
-        for (let i = 0; i < 12; i++) {
-            let region = datasource[i];
+            for (let i = 0; i < 12; i++) {
+                let region = datasource[i];
 
-            dailyDeathsMediaAverageArgentina(`ar-chart-daily-deaths-${i + 1}`,
-                `Fallecidos en ${region.name}: ${region.total}`,
-                `(${Math.round(region.average * 100) / 100} por cada 100.000 hab)`,
-                region);
-        }
-    });
+                dailyDeathsMediaAverageArgentina(`ar-chart-daily-deaths-${i + 1}`,
+                    `Fallecidos en ${region.name}: ${region.total}`,
+                    `(${Math.round(region.average * 100) / 100} por cada 100.000 hab)`,
+                    region);
+            }
+        });
 }

@@ -61,13 +61,16 @@ async function app() {
             }
 
             let fecha_inicio_sintomas = Date(data.fecha_inicio_sintomas + ' GMT-03:00');
-            if (isNaN(fecha_inicio_sintomas))
+            if (isNaN(fecha_inicio_sintomas) || fecha_inicio_sintomas < min)
                 fecha_inicio_sintomas = new Date(data.fecha_diagnostico + ' GMT-03:00');
-            if (isNaN(fecha_inicio_sintomas))
+            if (isNaN(fecha_inicio_sintomas)|| fecha_inicio_sintomas < min)
                 fecha_inicio_sintomas = new Date(data.fecha_apertura + ' GMT-03:00');
 
             if (isNaN(fecha_inicio_sintomas)) {
                 console.error("no se pudo determinar la fecha: ", data);
+                return;
+            }else if(fecha_inicio_sintomas < min){
+                console.error(`La fecha ${fecha_inicio_sintomas} es anterior a la fecha mínima ${min}`);
                 return;
             }
 

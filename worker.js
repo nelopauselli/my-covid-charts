@@ -64,12 +64,14 @@ fs.createReadStream('./temp/covid.csv')
             country.rows.push(row);
         }
 
-        let weekly_count = parseInt(data.weekly_count) || 0;
-        if (data.indicator === 'deaths')
-            row.deaths = weekly_count;
-        else if (data.indicator === 'cases')
-            row.cases = weekly_count;
-        country.rownum++;
+        let weekly_count = parseInt(data.weekly_count);
+        if (!isNaN8weekly_count) {
+            if (data.indicator === 'deaths')
+                row.deaths = weekly_count;
+            else if (data.indicator === 'cases')
+                row.cases = weekly_count;
+            country.rownum++;
+        }
     })
     .on('end', () => {
         var currentTime = new Date();
