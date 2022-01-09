@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 
 const path = require('path');
 
@@ -13,6 +14,11 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].bundle.[hash].js'
+    },
+    devServer:{
+        static:{
+            directory: path.join(__dirname, 'src'),
+        }
     },
     module: {
         rules: [
@@ -31,9 +37,6 @@ module.exports = {
             }
         ],
     },
-    devServer: {
-        contentBase: path.join(__dirname, 'dist'),
-    },
     plugins: [
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
@@ -44,6 +47,14 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             filename: 'caba.html', template: './src/caba.html'
+        }),
+        new CopyPlugin({
+            patterns: [
+                {
+                    from: path.resolve(__dirname, "src","data"),
+                    to: path.resolve(__dirname, "dist", "data")
+                }
+            ]
         }),
     ]
 };

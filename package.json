@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "worker-caba": "curl -o ./temp/covid-caba.csv https://cdn.buenosaires.gob.ar/datosabiertos/datasets/salud/casos-covid-19/casos_covid19.csv && node worker-caba.js",
-        "worker-arg": "curl -o ./temp/covid-arg.zip https://sisa.msal.gov.ar/datos/descargas/covid-19/files/Covid19Casos.zip && tar -C ./temp -xf ./temp/covid-arg.zip && node worker-arg.js",
+        "worker-arg": "curl -o ./temp/covid-arg.zip https://sisa.msal.gov.ar/datos/descargas/covid-19/files/Covid19Casos.zip && node worker-arg.js",
         "worker": "curl -o ./temp/covid.csv https://opendata.ecdc.europa.eu/covid19/nationalcasedeath/csv/ && node worker.js",
         "dev": "npx webpack-dev-server",
         "build": "npx webpack --mode=production",
@@ -15,21 +15,22 @@
     "author": "nelopauselli@gmail.com",
     "license": "ISC",
     "dependencies": {
-        "csv-parser": "^2.3.3",
-        "node-stream-zip": "^1.13.3"
+        "clean-webpack-plugin": "^4.0.0",
+        "css-loader": "^6.5.1",
+        "csv-loader": "^3.0.3",
+        "csv-parser": "^3.0.0",
+        "html-webpack-plugin": "^5.5.0",
+        "style-loader": "^3.3.1",
+        "webpack": "^5.65.0",
+        "webpack-cli": "^4.9.1",
+        "webpack-dev-server": "^4.7.2"
     },
     "devDependencies": {
-        "@babel/cli": "^7.8.4",
-        "@babel/core": "^7.9.0",
-        "@babel/plugin-proposal-class-properties": "^7.8.3",
-        "@babel/preset-env": "^7.9.5",
-        "babel-loader": "^8.1.0",
-        "clean-webpack-plugin": "^3.0.0",
-        "css-loader": "^3.5.2",
-        "html-webpack-plugin": "^4.2.0",
-        "style-loader": "^1.1.3",
-        "webpack": "^4.42.1",
-        "webpack-cli": "^3.3.12",
-        "webpack-dev-server": "^3.11.0"
+        "@babel/cli": "^7.16.7",
+        "@babel/core": "^7.16.7",
+        "@babel/plugin-proposal-class-properties": "^7.16.7",
+        "@babel/preset-env": "^7.16.7",
+        "babel-loader": "^8.2.3",
+        "copy-webpack-plugin": "^10.2.0"
     }
 }

@@ -55,15 +55,20 @@ fs.createReadStream('./temp/covid.csv')
 
         let row = country.rows.find(r => r.year_week === data.year_week);
         if (!row) {
-            country.rows.push(data);
-            row = data;
-            row.population = parseInt(data.population);
+            row = {
+                year_week: data.year_week,
+                population: parseInt(data.population),
+                deaths: 0,
+                cases: 0
+            };
+            country.rows.push(row);
         }
-        if (data.indicator === 'deaths')
-            row.deaths = parseInt(data.weekly_count);
-        else if (data.indicator === 'cases')
-            row.cases = parseInt(data.weekly_count);
 
+        let weekly_count = parseInt(data.weekly_count) || 0;
+        if (data.indicator === 'deaths')
+            row.deaths = weekly_count;
+        else if (data.indicator === 'cases')
+            row.cases = weekly_count;
         country.rownum++;
     })
     .on('end', () => {

@@ -1,36 +1,3 @@
-import totalDeathsSource from './data/total-deaths.json';
-import dailyDeathsArSource from './data/daily-deaths-arg.json';
-import dailyDeathsCoSource from './data/daily-deaths-col.json';
-import dailyDeathsBoSource from './data/daily-deaths-bol.json';
-import dailyDeathsPySource from './data/daily-deaths-pry.json';
-import dailyDeathsChSource from './data/daily-deaths-chl.json';
-import dailyDeathsPeSource from './data/daily-deaths-per.json';
-import dailyDeathsBrSource from './data/daily-deaths-bra.json';
-import dailyDeathsUsSource from './data/daily-deaths-usa.json';
-import dailyDeathsEsSource from './data/daily-deaths-esp.json';
-import dailyDeathsFrSource from './data/daily-deaths-fra.json';
-import dailyDeathsItSource from './data/daily-deaths-ita.json';
-import dailyDeathsSeSource from './data/daily-deaths-swe.json';
-import dailyDeathsUkSource from './data/daily-deaths-gbr.json';
-import dailyDeathsDeSource from './data/daily-deaths-deu.json';
-import dailyDeathsIsSource from './data/daily-deaths-isr.json';
-import totalCasesSource from './data/total-cases.json';
-import dailyCasesArSource from './data/daily-cases-arg.json';
-import dailyCasesCoSource from './data/daily-cases-col.json';
-import dailyCasesBoSource from './data/daily-cases-bol.json';
-import dailyCasesPySource from './data/daily-cases-pry.json';
-import dailyCasesChSource from './data/daily-cases-chl.json';
-import dailyCasesPeSource from './data/daily-cases-per.json';
-import dailyCasesBrSource from './data/daily-cases-bra.json';
-import dailyCasesUsSource from './data/daily-cases-usa.json';
-import dailyCasesEsSource from './data/daily-cases-esp.json';
-import dailyCasesFrSource from './data/daily-cases-fra.json';
-import dailyCasesItSource from './data/daily-cases-ita.json';
-import dailyCasesSeSource from './data/daily-cases-swe.json';
-import dailyCasesUkSource from './data/daily-cases-gbr.json';
-import dailyCasesDeSource from './data/daily-cases-deu.json';
-import dailyCasesIsSource from './data/daily-cases-isr.json';
-
 var colors = {
     cases: '#82b1ff',
     deaths: '#ff0000'
@@ -62,7 +29,7 @@ function ma(source, period) {
     return sma;
 }
 
-function totalDeathsSelectedCountriesBars() {
+function totalDeathsSelectedCountriesBars(totalDeathsSource) {
     let canvas = document.getElementById('chart-deaths-selected-countries-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -110,7 +77,7 @@ function totalDeathsSelectedCountriesBars() {
     });
 }
 
-function totalCasesSelectedCountriesBars() {
+function totalCasesSelectedCountriesBars(totalCasesSource) {
     let canvas = document.getElementById('chart-cases-selected-countries-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -158,7 +125,7 @@ function totalCasesSelectedCountriesBars() {
     });
 }
 
-function totalDeathsAllBars() {
+function totalDeathsAllBars(totalDeathsSource) {
     let canvas = document.getElementById('chart-deaths-all-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -207,7 +174,7 @@ function totalDeathsAllBars() {
     });
 }
 
-function totalDeathsLast14DaysBars() {
+function totalDeathsLast14DaysBars(totalDeathsSource) {
     let canvas = document.getElementById('chart-deaths-last-14-days-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -255,7 +222,22 @@ function totalDeathsLast14DaysBars() {
     });
 }
 
-function dailyDeathsMediaAverage(elementId, regionName, deathsSource, casesSource) {
+function dailyMediaAverageLoader(elementId, regionName, code) {
+    Promise.all(
+        [
+            fetch('./data/daily-deaths-' + code + '.json'),
+            fetch('./data/daily-cases-' + code + '.json')
+        ]).then(responses => {
+            return Promise.all([
+                responses[0].json(),
+                responses[1].json()]);
+        }
+        ).then(jsons => {
+            dailyMediaAverage(elementId, regionName, jsons[0], jsons[1]);
+        });
+}
+
+function dailyMediaAverage(elementId, regionName, deathsSource, casesSource) {
     let canvas = document.getElementById(elementId);
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -368,26 +350,34 @@ function dailyDeathsMediaAverage(elementId, regionName, deathsSource, casesSourc
 }
 
 export default function plotter(countries) {
-    totalDeathsSelectedCountriesBars();
-    totalCasesSelectedCountriesBars();
+    fetch('./data/total-deaths.json')
+        .then(response => response.json())
+        .then((response) => {
+            totalDeathsSelectedCountriesBars(response);
+            totalDeathsLast14DaysBars(response);
+            totalDeathsAllBars(response);
+        });
 
-    totalDeathsLast14DaysBars();
-    totalDeathsAllBars();
+    fetch('./data/total-cases.json')
+        .then(response => response.json())
+        .then((response) => {
+            totalCasesSelectedCountriesBars(response);
+        });
 
-    dailyDeathsMediaAverage('chart-daily-deaths-ar', 'Argentina', dailyDeathsArSource, dailyCasesArSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-br', 'Brasil', dailyDeathsBrSource, dailyCasesBrSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-co', 'Colombia', dailyDeathsCoSource, dailyCasesCoSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-bo', 'Bolivia', dailyDeathsBoSource, dailyCasesBoSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-py', 'Paraguay', dailyDeathsPySource, dailyCasesPySource);
-    dailyDeathsMediaAverage('chart-daily-deaths-ch', 'Chile', dailyDeathsChSource, dailyCasesChSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-pe', 'Perú', dailyDeathsPeSource, dailyCasesPeSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-us', 'EEUU', dailyDeathsUsSource, dailyCasesUsSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-es', 'España', dailyDeathsEsSource, dailyCasesEsSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-fr', 'Francia', dailyDeathsFrSource, dailyCasesFrSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-it', 'Italia', dailyDeathsItSource, dailyCasesItSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-se', 'Suecia', dailyDeathsSeSource, dailyCasesSeSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-uk', 'Reino Unido', dailyDeathsUkSource, dailyCasesUkSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-de', 'Alemania', dailyDeathsDeSource, dailyCasesDeSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-is', 'Israel', dailyDeathsIsSource, dailyCasesIsSource);
 
+    dailyMediaAverageLoader('chart-daily-deaths-ar', 'Argentina', 'arg');
+    dailyMediaAverageLoader('chart-daily-deaths-br', 'Brasil', 'bra');
+    dailyMediaAverageLoader('chart-daily-deaths-co', 'Colombia', 'col');
+    dailyMediaAverageLoader('chart-daily-deaths-bo', 'Bolivia', 'bol');
+    dailyMediaAverageLoader('chart-daily-deaths-py', 'Paraguay', 'pry');
+    dailyMediaAverageLoader('chart-daily-deaths-ch', 'Chile', 'chl');
+    dailyMediaAverageLoader('chart-daily-deaths-pe', 'Perú', 'per');
+    dailyMediaAverageLoader('chart-daily-deaths-de', 'Alemania', 'deu');
+    dailyMediaAverageLoader('chart-daily-deaths-ir', 'Irlanda', 'irl');
+    dailyMediaAverageLoader('chart-daily-deaths-us', 'EEUU', 'usa');
+    dailyMediaAverageLoader('chart-daily-deaths-es', 'España', 'esp');
+    dailyMediaAverageLoader('chart-daily-deaths-fr', 'Francia', 'fra');
+    dailyMediaAverageLoader('chart-daily-deaths-it', 'Italia', 'ita');
+    dailyMediaAverageLoader('chart-daily-deaths-se', 'Suecia', 'swe');
+    dailyMediaAverageLoader('chart-daily-deaths-uk', 'Reino Unido', 'gbr');
 }
