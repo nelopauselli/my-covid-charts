@@ -1,5 +1,3 @@
-import totalArgSource from './data/ar-total-deaths.json';
-
 var colors = {
     cases: '#82b1ff',
     deaths: '#ff0000'
@@ -25,7 +23,7 @@ function ma(source, period, propertyName = "deaths") {
     return sma;
 }
 
-function totalArgentinaCases() {
+function totalArgentinaCases(totalArgSource) {
     let canvas = document.getElementById('ar-chart-cases-time');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -129,7 +127,7 @@ function totalArgentinaCases() {
     });
 }
 
-function totalArgentinaDeaths() {
+function totalArgentinaDeaths(totalArgSource) {
     let canvas = document.getElementById('ar-chart-deaths-time');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -241,7 +239,7 @@ function totalArgentinaDeaths() {
     });
 }
 
-function totalArgentinaDeathsByRegion() {
+function totalArgentinaDeathsByRegion(totalArgSource) {
     let canvas = document.getElementById('ar-chart-deaths-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -288,7 +286,7 @@ function totalArgentinaDeathsByRegion() {
     });
 }
 
-function totalArgentinaCasesByRegion() {
+function totalArgentinaCasesByRegion(totalArgSource) {
     let canvas = document.getElementById('ar-chart-cases-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -335,7 +333,7 @@ function totalArgentinaCasesByRegion() {
     });
 }
 
-function last14DaysArgentina() {
+function last14DaysArgentina(totalArgSource) {
     let canvas = document.getElementById('ar-chart-deaths-last-14-days-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -511,21 +509,25 @@ function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, region) {
 }
 
 export default function plotter() {
-    totalArgentinaCases()
-    totalArgentinaDeaths();
-    totalArgentinaDeathsByRegion();
-    totalArgentinaCasesByRegion();
-    last14DaysArgentina();
+    fetch('./data/ar-total-deaths.json')
+        .then(response => response.json())
+    then(totalArgSource => {
+        totalArgentinaCases(totalArgSource)
+        totalArgentinaDeaths(totalArgSource);
+        totalArgentinaDeathsByRegion(totalArgSource);
+        totalArgentinaCasesByRegion(totalArgSource);
+        last14DaysArgentina(totalArgSource);
 
-    var datasource = totalArgSource
-        .sort((a, b) => b.average - a.average);
+        var datasource = totalArgSource
+            .sort((a, b) => b.average - a.average);
 
-    for (let i = 0; i < 12; i++) {
-        let region = datasource[i];
+        for (let i = 0; i < 12; i++) {
+            let region = datasource[i];
 
-        dailyDeathsMediaAverageArgentina(`ar-chart-daily-deaths-${i + 1}`,
-            `Fallecidos en ${region.name}: ${region.total}`,
-            `(${Math.round(region.average * 100) / 100} por cada 100.000 hab)`,
-            region);
-    }
+            dailyDeathsMediaAverageArgentina(`ar-chart-daily-deaths-${i + 1}`,
+                `Fallecidos en ${region.name}: ${region.total}`,
+                `(${Math.round(region.average * 100) / 100} por cada 100.000 hab)`,
+                region);
+        }
+    });
 }

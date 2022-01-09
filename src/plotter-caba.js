@@ -1,5 +1,3 @@
-import totalCabaSource from './data/caba-total-deaths.json';
-
 function ma(source, period, propertyName = "deaths") {
     var sum = 0;
     var sma = new Array(source.length);
@@ -20,7 +18,7 @@ function ma(source, period, propertyName = "deaths") {
     return sma;
 }
 
-function totalCABACases() {
+function totalCABACases(totalCabaSource) {
     let canvas = document.getElementById('caba-chart-cases-time');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -128,7 +126,7 @@ function totalCABACases() {
     });
 }
 
-function totalCABADeaths() {
+function totalCABADeaths(totalCabaSource) {
     let canvas = document.getElementById('caba-chart-deaths-time');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -244,7 +242,7 @@ function totalCABADeaths() {
     });
 }
 
-function totalCABAFutureDeaths() {
+function totalCABAFutureDeaths(totalCabaSource) {
     let canvas = document.getElementById('caba-chart-future-deaths-time');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -361,7 +359,7 @@ function totalCABAFutureDeaths() {
     });
 }
 
-function totalCABADeathsByRegion() {
+function totalCABADeathsByRegion(totalCabaSource) {
     let canvas = document.getElementById('caba-chart-deaths-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -409,7 +407,7 @@ function totalCABADeathsByRegion() {
     });
 }
 
-function totalCABACasesByRegion() {
+function totalCABACasesByRegion(totalCabaSource) {
     let canvas = document.getElementById('caba-chart-cases-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -457,7 +455,7 @@ function totalCABACasesByRegion() {
     });
 }
 
-function last14DaysCABA() {
+function last14DaysCABA(totalCabaSource) {
     let canvas = document.getElementById('caba-chart-deaths-last-14-days-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -621,22 +619,26 @@ function dailyDeathsMediaAverageCABA(elementId, title, subtitle, region) {
 }
 
 export default function plotter() {
-    totalCABACases()
-    totalCABADeaths();
-    totalCABAFutureDeaths();
-    totalCABADeathsByRegion();
-    totalCABACasesByRegion();
-    last14DaysCABA();
+    fetch('./data/caba-total-deaths.json')
+        .then(response => response.json())
+    then(totalCabaSource => {
+        totalCABACases(totalCabaSource)
+        totalCABADeaths(totalCabaSource);
+        totalCABAFutureDeaths(totalCabaSource);
+        totalCABADeathsByRegion(totalCabaSource);
+        totalCABACasesByRegion(totalCabaSource);
+        last14DaysCABA(totalCabaSource);
 
-    var datasource = totalCabaSource
-        .filter(function (r) { return r.parent == 'CABA'; })
-        .sort((a, b) => b.average - a.average);
+        var datasource = totalCabaSource
+            .filter(function (r) { return r.parent == 'CABA'; })
+            .sort((a, b) => b.average - a.average);
 
-    for (let i = 0; i < 12; i++) {
-        let region = datasource[i];
-        dailyDeathsMediaAverageCABA(`caba-chart-daily-deaths-${i + 1}`,
-            `Fallecidos en ${region.name}: ${region.total}`,
-            `(${Math.round(region.average * 100) / 100})`,
-            region);
-    }
+        for (let i = 0; i < 12; i++) {
+            let region = datasource[i];
+            dailyDeathsMediaAverageCABA(`caba-chart-daily-deaths-${i + 1}`,
+                `Fallecidos en ${region.name}: ${region.total}`,
+                `(${Math.round(region.average * 100) / 100})`,
+                region);
+        }
+    });
 }

@@ -9,11 +9,16 @@ module.exports = {
     entry: {
         world: './src/index.js',
         arg: './src/argentina.js',
-        //caba: './src/caba.js',
+        caba: './src/caba.js',
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].bundle.[hash].js'
+    },
+    devServer:{
+        static:{
+            directory: path.join(__dirname, 'src'),
+        }
     },
     module: {
         rules: [
@@ -37,12 +42,12 @@ module.exports = {
         new HtmlWebpackPlugin({
             filename: 'index.html', template: './src/index.html'
         }),
-        // new HtmlWebpackPlugin({
-        //     filename: 'argentina.html', template: './src/argentina.html'
-        // }),
-        // new HtmlWebpackPlugin({
-        //     filename: 'caba.html', template: './src/caba.html'
-        // }),
+        new HtmlWebpackPlugin({
+            filename: 'argentina.html', template: './src/argentina.html'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'caba.html', template: './src/caba.html'
+        }),
         new CopyPlugin({
             patterns: [
                 {
