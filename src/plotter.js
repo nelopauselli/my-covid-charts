@@ -1,18 +1,3 @@
-import totalDeathsSource from './data/total-deaths.json';
-import dailyDeathsArSource from './data/daily-deaths-arg.json';
-import dailyDeathsCoSource from './data/daily-deaths-col.json';
-import dailyDeathsBoSource from './data/daily-deaths-bol.json';
-import dailyDeathsPySource from './data/daily-deaths-pry.json';
-import dailyDeathsChSource from './data/daily-deaths-chl.json';
-import dailyDeathsPeSource from './data/daily-deaths-per.json';
-import dailyDeathsBrSource from './data/daily-deaths-bra.json';
-import dailyDeathsUsSource from './data/daily-deaths-usa.json';
-import dailyDeathsEsSource from './data/daily-deaths-esp.json';
-import dailyDeathsFrSource from './data/daily-deaths-fra.json';
-import dailyDeathsItSource from './data/daily-deaths-ita.json';
-import dailyDeathsSeSource from './data/daily-deaths-swe.json';
-import dailyDeathsUkSource from './data/daily-deaths-gbr.json';
-
 var colors = {
     cases: '#82b1ff',
     deaths: '#ff0000'
@@ -36,7 +21,7 @@ function ma(source, period) {
     return sma;
 }
 
-function totalDeathsSelectedCountriesBars() {
+function totalDeathsSelectedCountriesBars(totalDeathsSource) {
     let canvas = document.getElementById('chart-deaths-selected-countries-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -91,7 +76,7 @@ function totalDeathsSelectedCountriesBars() {
     });
 }
 
-function totalDeathsAllBars() {
+function totalDeathsAllBars(totalDeathsSource) {
     let canvas = document.getElementById('chart-deaths-all-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -140,7 +125,7 @@ function totalDeathsAllBars() {
     });
 }
 
-function totalDeathsLast14DaysBars() {
+function totalDeathsLast14DaysBars(totalDeathsSource) {
     let canvas = document.getElementById('chart-deaths-last-14-days-bars');
     if (!canvas) return;
     canvas.width = window.innerWidth;
@@ -211,7 +196,7 @@ function dailyDeathsMediaAverage(elementId, regionName, source) {
             label: 'diario',
             data: datasource,
             backgroundColor: colors.deaths + "22",
-            borderColor: colors.deaths +"22",
+            borderColor: colors.deaths + "22",
             borderWidth: 0,
             pointRadius: 0
         }, {
@@ -264,21 +249,78 @@ function dailyDeathsMediaAverage(elementId, regionName, source) {
 }
 
 export default function plotter(countries) {
-    totalDeathsSelectedCountriesBars();
-    totalDeathsLast14DaysBars();
-    totalDeathsAllBars();
+    fetch('./data/total-deaths.json')
+        .then(response => response.json())
+        .then((response) => {
+            totalDeathsSelectedCountriesBars(response);
+            totalDeathsLast14DaysBars(response);
+            totalDeathsAllBars(response);
+        });
 
-    dailyDeathsMediaAverage('chart-daily-deaths-ar', 'Argentina', dailyDeathsArSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-br', 'Brasil', dailyDeathsBrSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-co', 'Colombia', dailyDeathsCoSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-bo', 'Bolivia', dailyDeathsBoSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-py', 'Paraguay', dailyDeathsPySource);
-    dailyDeathsMediaAverage('chart-daily-deaths-ch', 'Chile', dailyDeathsChSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-pe', 'Perú', dailyDeathsPeSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-us', 'EEUU', dailyDeathsUsSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-es', 'España', dailyDeathsEsSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-fr', 'Francia', dailyDeathsFrSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-it', 'Italia', dailyDeathsItSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-se', 'Suecia', dailyDeathsSeSource);
-    dailyDeathsMediaAverage('chart-daily-deaths-uk', 'Reino Unido', dailyDeathsUkSource);
+    fetch('./data/daily-deaths-arg.json')
+        .then(response => response.json())
+        .then(response => {
+            dailyDeathsMediaAverage('chart-daily-deaths-ar', 'Argentina', response);
+        });
+
+    fetch('./data/daily-deaths-bra.json')
+        .then(response => response.json())
+        .then(response => {
+            dailyDeathsMediaAverage('chart-daily-deaths-br', 'Brasil', response);
+        });
+    fetch('./data/daily-deaths-col.json')
+        .then(response => response.json())
+        .then(response => {
+            dailyDeathsMediaAverage('chart-daily-deaths-co', 'Colombia', response);
+        });
+    fetch('./data/daily-deaths-bol.json')
+        .then(response => response.json())
+        .then(response => {
+            dailyDeathsMediaAverage('chart-daily-deaths-bo', 'Bolivia', response);
+        });
+    fetch('./data/daily-deaths-pry.json')
+        .then(response => response.json())
+        .then(response => {
+            dailyDeathsMediaAverage('chart-daily-deaths-py', 'Paraguay', response);
+        });
+    fetch('./data/daily-deaths-chl.json')
+        .then(response => response.json())
+        .then(response => {
+            dailyDeathsMediaAverage('chart-daily-deaths-ch', 'Chile', response);
+        });
+    fetch('./data/daily-deaths-per.json')
+        .then(response => response.json())
+        .then(response => {
+            dailyDeathsMediaAverage('chart-daily-deaths-pe', 'Perú', response);
+        });
+    fetch('./data/daily-deaths-usa.json')
+        .then(response => response.json())
+        .then(response => {
+            dailyDeathsMediaAverage('chart-daily-deaths-us', 'EEUU', response);
+        });
+    fetch('./data/daily-deaths-esp.json')
+        .then(response => response.json())
+        .then(response => {
+            dailyDeathsMediaAverage('chart-daily-deaths-es', 'España', response);
+        });
+    fetch('./data/daily-deaths-fra.json')
+        .then(response => response.json())
+        .then(response => {
+            dailyDeathsMediaAverage('chart-daily-deaths-fr', 'Francia', response);
+        });
+    fetch('./data/daily-deaths-ita.json')
+        .then(response => response.json())
+        .then(response => {
+            dailyDeathsMediaAverage('chart-daily-deaths-it', 'Italia', response);
+        });
+    fetch('./data/daily-deaths-swe.json')
+        .then(response => response.json())
+        .then(response => {
+            dailyDeathsMediaAverage('chart-daily-deaths-se', 'Suecia', response);
+        });
+    fetch('./data/daily-deaths-gbr.json')
+        .then(response => response.json())
+        .then(response => {
+            dailyDeathsMediaAverage('chart-daily-deaths-uk', 'Reino Unido', response);
+        });
 }
