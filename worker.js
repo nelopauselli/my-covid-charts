@@ -2,6 +2,25 @@ const fs = require('fs'),
     path = require('path');
 const csv = require('csv-parser');
 
+Date.prototype.getWeek = function () {
+    var date = new Date(this.getTime());
+    date.setHours(0, 0, 0, 0);
+    // Thursday in current week decides the year.
+    date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+    // January 4 is always in week 1.
+    var week1 = new Date(date.getFullYear(), 0, 4);
+    // Adjust to Thursday in week 1 and count number of weeks from date to week1.
+    return 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000
+        - 3 + (week1.getDay() + 6) % 7) / 7);
+}
+
+// Returns the four-digit year corresponding to the ISO week of the date.
+Date.prototype.getWeekYear = function () {
+    var date = new Date(this.getTime());
+    date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+    return date.getFullYear();
+}
+
 let workingFolder = './src/data';
 
 var countries = [];
@@ -48,23 +67,45 @@ fs.createReadStream('./temp/covid.csv')
         country.rownum++;
     })
     .on('end', () => {
+        var currentTime = new Date();
+        var fecha7 = new Date((new Date()).setDate(currentTime.getDate() - 7));
+        var fecha14 = new Date((new Date()).setDate(currentTime.getDate() - 14));
+        let weeks = [
+            currentTime.getWeekYear() + "-" + currentTime.getWeek(),
+            fecha7.getWeekYear() + "-" + fecha7.getWeek(),
+            fecha14.getWeekYear() + "-" + fecha14.getWeek(),
+        ]
+
+
         for (let country of countries) {
             country.deathsTotal = 0;
             country.deathsLast14DaysTotal = 0;
             country.deathsSumPerDay = [];
             country.deathsAbsPerDay = [];
+            country.casesTotal = 0;
+            country.casesLast14DaysTotal = 0;
+            country.casesSumPerDay = [];
+            country.casesAbsPerDay = [];
 
             let index = 0;
             for (let row of country.rows) {
                 let deaths = row.deaths;
                 country.deathsTotal += deaths;
-                if (index < 2) country.deathsLast14DaysTotal += deaths;
+                let cases = row.cases;
+                country.casesTotal += cases;
 
+                if (weeks.includes(row.year_week)) {
+                    country.deathsLast14DaysTotal += deaths;
+                    country.casesLast14DaysTotal += cases;
+                }
                 if (country.deathsTotal > 0) {
                     country.deathsSumPerDay.push(country.deathsTotal);
                     country.deathsAbsPerDay.push(deaths);
                 }
-
+                if (country.casesTotal > 0) {
+                    country.casesSumPerDay.push(country.casesTotal);
+                    country.casesAbsPerDay.push(cases);
+                }
                 index++;
             }
         }
@@ -107,9 +148,25 @@ fs.createReadStream('./temp/covid.csv')
             )
         );
 
+        fs.writeFileSync(path.join(workingFolder, 'total-cases.json'),
+            JSON.stringify(
+                countries.map(c =>
+                ({
+                    geoId: c.geoId,
+                    name: c.name,
+                    color: c.color,
+                    averageLast14Days: c.casesLast14DaysTotal * 100000 / c.population,
+                    total: c.casesTotal,
+                    average: c.casesTotal * 100000 / c.population
+                })).concat(continents)
+            )
+        );
+
         for (let country of countries) {
             fs.writeFileSync(path.join(workingFolder, `./accumulated-daily-deaths-${country.geoId.toLowerCase()}.json`), JSON.stringify(country.deathsSumPerDay));
+            fs.writeFileSync(path.join(workingFolder, `./accumulated-daily-cases-${country.geoId.toLowerCase()}.json`), JSON.stringify(country.casesSumPerDay));
             fs.writeFileSync(path.join(workingFolder, `./daily-deaths-${country.geoId.toLowerCase()}.json`), JSON.stringify(country.deathsAbsPerDay));
+            fs.writeFileSync(path.join(workingFolder, `./daily-cases-${country.geoId.toLowerCase()}.json`), JSON.stringify(country.casesAbsPerDay));
         }
 
         fs.writeFileSync(path.join(workingFolder, `./total-deaths-per-continent.json`),

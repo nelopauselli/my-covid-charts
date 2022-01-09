@@ -3,6 +3,14 @@ var colors = {
     deaths: '#ff0000'
 }
 
+let countries = [
+    'ARG', 'BRA', 'CHL', 'ECU', 'COL', 'URY', 'PER', 'BOL', 'PRY', 'USA', 'MEX',
+    'DEU', 'IRL', 'SWE', 'GBR', 'ESP', 'DEU', 'ITA', 'FRA', 'RUS',
+    'ISR', 'JPN', 'CHN', 'IND',
+    'AUS',
+    'Asia', 'Europe', 'America', 'Africa'];
+
+
 function ma(source, period) {
     var sum = 0;
     var sma = new Array(source.length);
@@ -26,13 +34,6 @@ function totalDeathsSelectedCountriesBars(totalDeathsSource) {
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
-    let countries = [
-        'ARG', 'BRA', 'CHL', 'ECU', 'COL', 'URY', 'PER', 'BOL', 'PRY', 'USA', 'MEX',
-        'IRL', 'SWE', 'GBR', 'ESP', 'DEU', 'ITA', 'FRA', 'RUS',
-        'ISR', 'JPN', 'CHN',
-        'AUS',
-        'Asia', 'Europe', 'America', 'Africa'];
 
     var datasource = totalDeathsSource
         .filter(c => countries.includes(c.geoId))
@@ -64,6 +65,54 @@ function totalDeathsSelectedCountriesBars(totalDeathsSource) {
             title: {
                 display: true,
                 text: 'Fallecidos cada 100.000 habitantes'
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
+
+function totalCasesSelectedCountriesBars(totalCasesSource) {
+    let canvas = document.getElementById('chart-cases-selected-countries-bars');
+    if (!canvas) return;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    var datasource = totalCasesSource
+        .filter(c => countries.includes(c.geoId))
+        .sort((a, b) => b.average - a.average);
+
+    let data = {
+        labels: datasource.map(c => c.name),
+        datasets: [{
+            data: datasource.map(c => c.average),
+            backgroundColor: datasource.map(c => c.color + "22"),
+            borderColor: datasource.map(c => c.color + "AA")
+        }]
+    };
+
+    var horizontalBarCtx = canvas.getContext('2d');
+    new Chart(horizontalBarCtx, {
+        type: 'bar',
+        data: data,
+        options: {
+            elements: {
+                rectangle: {
+                    borderWidth: 2,
+                }
+            },
+            responsive: true,
+            legend: {
+                display: false,
+            },
+            title: {
+                display: true,
+                text: 'Casos cada 100.000 habitantes'
             },
             scales: {
                 yAxes: [{
@@ -132,9 +181,8 @@ function totalDeathsLast14DaysBars(totalDeathsSource) {
     canvas.height = window.innerHeight;
 
     var datasource = totalDeathsSource
-        .filter(c => c.averageLast14Days > 0)
-        .sort((a, b) => b.averageLast14Days - a.averageLast14Days)
-        .slice(0, 20);
+        .filter(c => countries.includes(c.geoId))
+        .sort((a, b) => b.averageLast14Days - a.averageLast14Days);
 
     let data = {
         labels: datasource.map(c => c.name),
@@ -161,7 +209,7 @@ function totalDeathsLast14DaysBars(totalDeathsSource) {
             },
             title: {
                 display: true,
-                text: 'Fallecidos cada 100.000 habitantes (ultimos 14 días)'
+                text: 'Fallecidos cada 100.000 habitantes (ultimas 3 semanas)'
             },
             scales: {
                 yAxes: [{
@@ -174,44 +222,85 @@ function totalDeathsLast14DaysBars(totalDeathsSource) {
     });
 }
 
-function dailyDeathsMediaAverage(elementId, regionName, source) {
+function dailyMediaAverageLoader(elementId, regionName, code) {
+    Promise.all(
+        [
+            fetch('./data/daily-deaths-' + code + '.json'),
+            fetch('./data/daily-cases-' + code + '.json')
+        ]).then(responses => {
+            return Promise.all([
+                responses[0].json(),
+                responses[1].json()]);
+        }
+        ).then(jsons => {
+            dailyMediaAverage(elementId, regionName, jsons[0], jsons[1]);
+        });
+}
+
+function dailyMediaAverage(elementId, regionName, deathsSource, casesSource) {
     let canvas = document.getElementById(elementId);
     if (!canvas) return;
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    var datasource = source.map((a, i) =>
-        ({ x: moment().subtract(source.length - i, 'weeks').toDate(), y: Math.max(a, 0) })
+    var dataSourceDeaths = deathsSource.map((a, i) =>
+        ({ x: moment().subtract(deathsSource.length - i, 'weeks').toDate(), y: Math.max(a, 0) })
     );
-    var average28 = ma(source, 4);
-    var datasource28 = average28.map((a, i) =>
-        ({ x: moment().subtract(average28.length - i, 'weeks').toDate(), y: Math.max(a, 0) })
+    var dataSourceCases = casesSource.map((a, i) =>
+        ({ x: moment().subtract(casesSource.length - i, 'weeks').toDate(), y: Math.max(a, 0) })
     );
-
-    var max = Math.max.apply(null, source);
+    var averageDeaths28 = ma(deathsSource, 4);
+    var dataSourceDeaths28 = averageDeaths28.map((a, i) =>
+        ({ x: moment().subtract(averageDeaths28.length - i, 'weeks').toDate(), y: Math.max(a, 0) })
+    );
+    var averageCases28 = ma(casesSource, 4);
+    var dataSourceCases28 = averageCases28.map((a, i) =>
+        ({ x: moment().subtract(averageCases28.length - i, 'weeks').toDate(), y: Math.max(a, 0) })
+    );
+    var maxDeaths = Math.max.apply(null, deathsSource);
+    var maxCases = Math.max.apply(null, casesSource);
 
     let data = {
-        labels: datasource.map((e, i) => e.x),
+        labels: dataSourceDeaths.map((e, i) => e.x),
         datasets: [{
-            label: 'diario',
-            data: datasource,
+            label: 'fallecidos semanal',
+            data: dataSourceDeaths,
             backgroundColor: colors.deaths + "22",
             borderColor: colors.deaths + "22",
             borderWidth: 0,
-            pointRadius: 0
+            pointRadius: 0,
+            yAxisID: 'y-axis-1',
         }, {
-            label: '4 semanas',
-            data: datasource28,
+            label: 'fallecidos 4 semanas',
+            data: dataSourceDeaths28,
             fill: false,
             backgroundColor: colors.deaths + "22",
             borderColor: colors.deaths,
             borderWidth: 2,
-            pointRadius: 0
+            pointRadius: 0,
+            yAxisID: 'y-axis-1',
+        }, {
+            label: 'casos semanal',
+            data: dataSourceCases,
+            backgroundColor: colors.cases + "22",
+            borderColor: colors.cases + "22",
+            borderWidth: 0,
+            pointRadius: 0,
+            yAxisID: 'y-axis-2',
+        }, {
+            label: 'casos 4 semanas',
+            data: dataSourceCases28,
+            fill: false,
+            backgroundColor: colors.cases + "22",
+            borderColor: colors.cases,
+            borderWidth: 2,
+            pointRadius: 0,
+            yAxisID: 'y-axis-2',
         }
         ]
     };
 
-    var total = source.reduce((a, c) => a + c, 0);
+    var total = deathsSource.reduce((a, c) => a + c, 0);
 
     var ctx = canvas.getContext('2d');
     new Chart(ctx, {
@@ -230,8 +319,20 @@ function dailyDeathsMediaAverage(elementId, regionName, source) {
                 yAxes: [{
                     ticks: {
                         beginAtZero: true,
-                        max: Math.round(max * 1.1)
-                    }
+                        max: Math.round(maxDeaths * 1.1)
+                    },
+                    position: 'left',
+                    id: 'y-axis-1',
+                }, {
+                    ticks: {
+                        beginAtZero: true,
+                        max: Math.round(maxCases * 1.1)
+                    },
+                    position: 'right',
+                    id: 'y-axis-2',
+                    gridLines: {
+                        drawOnChartArea: false, // only want the grid lines for one axis to show up
+                    },
                 }],
                 xAxes: [{
                     type: "time",
@@ -257,70 +358,26 @@ export default function plotter(countries) {
             totalDeathsAllBars(response);
         });
 
-    fetch('./data/daily-deaths-arg.json')
+    fetch('./data/total-cases.json')
         .then(response => response.json())
-        .then(response => {
-            dailyDeathsMediaAverage('chart-daily-deaths-ar', 'Argentina', response);
+        .then((response) => {
+            totalCasesSelectedCountriesBars(response);
         });
 
-    fetch('./data/daily-deaths-bra.json')
-        .then(response => response.json())
-        .then(response => {
-            dailyDeathsMediaAverage('chart-daily-deaths-br', 'Brasil', response);
-        });
-    fetch('./data/daily-deaths-col.json')
-        .then(response => response.json())
-        .then(response => {
-            dailyDeathsMediaAverage('chart-daily-deaths-co', 'Colombia', response);
-        });
-    fetch('./data/daily-deaths-bol.json')
-        .then(response => response.json())
-        .then(response => {
-            dailyDeathsMediaAverage('chart-daily-deaths-bo', 'Bolivia', response);
-        });
-    fetch('./data/daily-deaths-pry.json')
-        .then(response => response.json())
-        .then(response => {
-            dailyDeathsMediaAverage('chart-daily-deaths-py', 'Paraguay', response);
-        });
-    fetch('./data/daily-deaths-chl.json')
-        .then(response => response.json())
-        .then(response => {
-            dailyDeathsMediaAverage('chart-daily-deaths-ch', 'Chile', response);
-        });
-    fetch('./data/daily-deaths-per.json')
-        .then(response => response.json())
-        .then(response => {
-            dailyDeathsMediaAverage('chart-daily-deaths-pe', 'Perú', response);
-        });
-    fetch('./data/daily-deaths-usa.json')
-        .then(response => response.json())
-        .then(response => {
-            dailyDeathsMediaAverage('chart-daily-deaths-us', 'EEUU', response);
-        });
-    fetch('./data/daily-deaths-esp.json')
-        .then(response => response.json())
-        .then(response => {
-            dailyDeathsMediaAverage('chart-daily-deaths-es', 'España', response);
-        });
-    fetch('./data/daily-deaths-fra.json')
-        .then(response => response.json())
-        .then(response => {
-            dailyDeathsMediaAverage('chart-daily-deaths-fr', 'Francia', response);
-        });
-    fetch('./data/daily-deaths-ita.json')
-        .then(response => response.json())
-        .then(response => {
-            dailyDeathsMediaAverage('chart-daily-deaths-it', 'Italia', response);
-        });
-    fetch('./data/daily-deaths-swe.json')
-        .then(response => response.json())
-        .then(response => {
-            dailyDeathsMediaAverage('chart-daily-deaths-se', 'Suecia', response);
-        });
-    fetch('./data/daily-deaths-gbr.json')
-        .then(response => response.json())
-        .then(response => {
-            dailyDeathsMediaAverage('chart-daily-deaths-uk', 'Reino Unido', response);
-        });
+
+    dailyMediaAverageLoader('chart-daily-deaths-ar', 'Argentina', 'arg');
+    dailyMediaAverageLoader('chart-daily-deaths-br', 'Brasil', 'bra');
+    dailyMediaAverageLoader('chart-daily-deaths-co', 'Colombia', 'col');
+    dailyMediaAverageLoader('chart-daily-deaths-bo', 'Bolivia', 'bol');
+    dailyMediaAverageLoader('chart-daily-deaths-py', 'Paraguay', 'pry');
+    dailyMediaAverageLoader('chart-daily-deaths-ch', 'Chile', 'chl');
+    dailyMediaAverageLoader('chart-daily-deaths-pe', 'Perú', 'per');
+    dailyMediaAverageLoader('chart-daily-deaths-de', 'Alemania', 'deu');
+    dailyMediaAverageLoader('chart-daily-deaths-ir', 'Irlanda', 'irl');
+    dailyMediaAverageLoader('chart-daily-deaths-us', 'EEUU', 'usa');
+    dailyMediaAverageLoader('chart-daily-deaths-es', 'España', 'esp');
+    dailyMediaAverageLoader('chart-daily-deaths-fr', 'Francia', 'fra');
+    dailyMediaAverageLoader('chart-daily-deaths-it', 'Italia', 'ita');
+    dailyMediaAverageLoader('chart-daily-deaths-se', 'Suecia', 'swe');
+    dailyMediaAverageLoader('chart-daily-deaths-uk', 'Reino Unido', 'gbr');
 }

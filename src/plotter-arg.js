@@ -55,13 +55,33 @@ function totalArgentinaCases() {
         }, 0);
     }, 0)
 
+    let limitDate = moment().subtract(13, "days");
+    let max = datasource.reduce((p, c) => p > c.deaths ? p : c.deaths, 0);
+    let limitData = [{ x: limitDate, y: 0 }, { x: limitDate, y: max }];
+
+    let limit = datasource.length - 13;
     let data = {
         labels: datasource.map(c => c.date),
         datasets: [{
-            label: 'diario',
-            data: datasource.map(c => c.deaths),
+            label: 'limite',
+            data: limitData,
+            backgroundColor: "orange",
+            borderColor: "orange",
+            borderWidth: 2,
+            borderDash: [2],
+            pointRadius: 0,
+        }, {
+            label: 'semanal',
+            data: datasource.map((c, i) => i <= limit ? c.deaths : null),
             backgroundColor: colors.cases + "22",
             borderColor: colors.cases + "22",
+            borderWidth: 0,
+            pointRadius: 0,
+        }, {
+            label: 'semanal',
+            data: datasource.map((c, i) => i >= limit ? c.deaths : null),
+            backgroundColor: "#0f0f0f22",
+            borderColor: "#0f0f0f22",
             borderWidth: 0,
             pointRadius: 0,
         }, {
@@ -147,13 +167,33 @@ function totalArgentinaDeaths() {
 
     var fatality = deaths * 100 / cases;
 
+    let limitDate = moment().subtract(13, "days");
+    let max = datasource.reduce((p, c) => p > c.deaths ? p : c.deaths, 0);
+    let limitData = [{ x: limitDate, y: 0 }, { x: limitDate, y: max }];
+
+    let limit = datasource.length - 13;
     let data = {
         labels: datasource.map(c => c.date),
         datasets: [{
-            label: 'diario',
-            data: datasource.map(c => c.deaths),
+            label: 'limite',
+            data: limitData,
+            backgroundColor: "orange",
+            borderColor: "orange",
+            borderWidth: 2,
+            borderDash: [2],
+            pointRadius: 0,
+        }, {
+            label: 'semanal',
+            data: datasource.map((c, i) => i <= limit ? c.deaths : null),
             backgroundColor: colors.deaths + "22",
             borderColor: colors.deaths + "22",
+            borderWidth: 0,
+            pointRadius: 0,
+        }, {
+            label: 'semanal',
+            data: datasource.map((c, i) => i >= limit ? c.deaths : null),
+            backgroundColor: "#0f0f0f22",
+            borderColor: "#0f0f0f22",
             borderWidth: 0,
             pointRadius: 0,
         }, {
@@ -179,99 +219,6 @@ function totalArgentinaDeaths() {
             title: {
                 display: true,
                 text: ['Fallecidos en Argentina: ' + deaths + ' personas', 'ttl: ' + parseInt(ttl) + ' d\u00EDas - letalidad: ' + parseInt(fatality) + '%']
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }],
-                xAxes: [{
-                    type: "time",
-                    time: {
-                        tooltipFormat: 'll'
-                    },
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'Date'
-                    }
-                }]
-            }
-        }
-    });
-}
-
-function totalArgentinaFutureDeaths() {
-    let canvas = document.getElementById('ar-chart-future-deaths-time');
-    if (!canvas) return;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    var datasource = [];
-    for (var i = 0; i < totalArgSource[0].rows.length; i++) {
-        var row = {
-            date: totalArgSource[0].rows[i].date,
-            deaths: totalArgSource.reduce(function (a, c) {
-                if (c.rows && c.rows.length)
-                    return a + c.rows[i].futureDeaths
-                return a;
-            }, 0)
-        }
-        datasource.push(row);
-    }
-
-    var averageAR28 = ma(datasource, 28);
-    var datasourceAR28 = averageAR28.map(a =>
-        ({ x: a.date, y: a.total })
-    );
-
-    var deaths = totalArgSource.reduce(function (a, c) {
-        return a + c.total;
-    }, 0);
-
-    var cases = totalArgSource.reduce(function (a, c) {
-        return a + c.cases;
-    }, 0);
-
-    var ttl = totalArgSource.filter(function (r) { return r.ttl }).reduce(function (a, c) {
-        return a + c.ttl;
-    }, 0) / totalArgSource.filter(function (r) { return r.ttl }).length;
-
-    var fatality = deaths * 100 / cases;
-
-    let data = {
-        labels: datasource.map(c => c.date),
-        datasets: [{
-            label: 'diario',
-            data: datasource.map(c => c.deaths),
-            backgroundColor: colors.deaths + "22",
-            borderColor: colors.deaths + "22",
-            borderWidth: 0,
-            pointRadius: 0,
-        }, {
-            label: '4 semanas',
-            data: datasourceAR28,
-            fill: false,
-            backgroundColor: colors.deaths + "22",
-            borderColor: colors.deaths,
-            borderWidth: 2,
-            pointRadius: 0
-        }]
-    };
-
-    var ctx = canvas.getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
-        data: data,
-        options: {
-            responsive: true,
-            legend: {
-                display: false,
-            },
-            title: {
-                display: true,
-                text: ['Fallecidos en Argentina seg\u00FAn Inicio de S\u00EDntomas: ' + deaths + ' personas',
-                'ttl: ' + parseInt(ttl) + ' d\u00EDas - letalidad: ' + parseInt(fatality) + '%']
             },
             scales: {
                 yAxes: [{
@@ -461,10 +408,23 @@ function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, region) {
         ({ x: moment(a.date).toDate(), y: a.total })
     );
 
+    let limitDate = moment().subtract(13, "days");
+    let max = datasourceDeaths.reduce((p, c) => p > c.y ? p : c.y, 0);
+    let limitData = [{ x: limitDate, y: 0 }, { x: limitDate, y: max }];
+
     let data = {
         labels: datasourceDeaths.map((e) => e.x),
         datasets: [{
-            label: 'diario',
+            label: 'limite',
+            data: limitData,
+            backgroundColor: "orange",
+            borderColor: "orange",
+            borderWidth: 2,
+            borderDash: [2],
+            pointRadius: 0,
+            yAxisID: 'y-axis-1',
+        }, {
+            label: 'semanal',
             data: datasourceDeaths,
             backgroundColor: colors.deaths + "22",
             borderColor: colors.deaths + "22",
@@ -494,7 +454,7 @@ function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, region) {
             label: '14 d\u00EDas',
             data: datasourceMediaCases,
             fill: false,
-            backgroundColor: colors.cases+"22",
+            backgroundColor: colors.cases + "22",
             borderColor: colors.cases,
             borderWidth: 2,
             pointRadius: 0,
@@ -553,7 +513,6 @@ function dailyDeathsMediaAverageArgentina(elementId, title, subtitle, region) {
 export default function plotter() {
     totalArgentinaCases()
     totalArgentinaDeaths();
-    totalArgentinaFutureDeaths();
     totalArgentinaDeathsByRegion();
     totalArgentinaCasesByRegion();
     last14DaysArgentina();
