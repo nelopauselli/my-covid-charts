@@ -65,7 +65,7 @@ fs.createReadStream('./temp/covid.csv')
         }
 
         let weekly_count = parseInt(data.weekly_count);
-        if (!isNaN8weekly_count) {
+        if (!isNaN(weekly_count)) {
             if (data.indicator === 'deaths')
                 row.deaths = weekly_count;
             else if (data.indicator === 'cases')
